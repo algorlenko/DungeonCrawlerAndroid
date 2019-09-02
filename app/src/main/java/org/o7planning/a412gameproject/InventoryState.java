@@ -15,6 +15,9 @@ public class InventoryState extends GameState {
     public GameScreen thisScreen;
     public Equipment myTestItem;
 
+
+
+    public Rect myRectangle;
     public Bitmap menuImage;
     public Inventory heroInventory;
     public Hero myHero;
@@ -31,6 +34,7 @@ public class InventoryState extends GameState {
     public final int BOOTS = 5;
 
     public InventoryState(GameScreen myScreen, GameStateManager passedGSM, Hero theHero) throws IOException {
+        myRectangle = new Rect();
         thisScreen = myScreen;
         myGSM = passedGSM;
         myHero = theHero;
@@ -38,8 +42,8 @@ public class InventoryState extends GameState {
         rows = (int) Math.sqrt(heroInventory.storageSpace);
         columns = rows;
         hoveredSlot = -1;
-      //  menuImage = generateImage(R.drawable.inventorysheen2b);
-        menuImage = generateImage(R.drawable.staff_mummy);
+      menuImage = generateImage(R.drawable.inventorysheen2b);
+        //menuImage = generateImage(R.drawable.staff_mummy);
         selectedSlot = -1;
     }
 
@@ -50,15 +54,17 @@ public class InventoryState extends GameState {
         //  thisScreen.gbi.drawString(("This item is Level " + myTestItem.powerLevel), 50, 40);
         //}
 
-        int myHeight = thisScreen.myBufferedDimension.getHeight();
-        int myWidth = thisScreen.myBufferedDimension.getWidth() / 2;
-        thisScreen.canvas.drawBitmap(menuImage, null, new Rect(0,0, myHeight * 1, myWidth * 2), null);
-        drawInventory(myWidth, myHeight);
-        drawEquipped(myWidth, myHeight);
+
+        int myHeight = canvas.getHeight();
+        int myWidth = canvas.getWidth() / 2;
+        myRectangle.set(0,0,  myWidth * 2, myHeight * 1);
+        canvas.drawBitmap(menuImage, null, myRectangle, null);
+        drawInventory(myWidth, myHeight, canvas);
+        drawEquipped(myWidth, myHeight, canvas);
        // drawDescription(myWidth, myHeight);
     }
 
-    public void drawInventory(int myWidth, int myHeight) {
+    public void drawInventory(int myWidth, int myHeight, Canvas canvas) {
 
         int itemNumber = 0;
 
@@ -69,7 +75,8 @@ public class InventoryState extends GameState {
                     if (heroInventory.items[itemNumber] != null) {
                         // HIGH PRIORITY replace the fucking cursor system or inventory will be unusable.
                         // I will repopulate this later HIGH PRIOIRTY
-                      //  thisScreen.gbi.drawImage(heroInventory.items[itemNumber].image, ((myWidth / columns) * i) + 20, (myHeight / rows) * j + 20, (int) (myWidth * 0.8) / columns, (int) (myHeight * 0.8) / rows, null);
+                        myRectangle.set(((myWidth / columns) * i), ((myHeight / rows) * j), (int) (myWidth * (i + 0.8)) / columns, (int) (myHeight * (j + 0.8) / rows));
+                      canvas.drawBitmap(heroInventory.items[itemNumber].image,null, myRectangle, null);
                     }
 
                 }
@@ -78,11 +85,12 @@ public class InventoryState extends GameState {
         }
     }
 
-    public void drawEquipped(int myWidth, int myHeight) {
+    public void drawEquipped(int myWidth, int myHeight, Canvas canvas) {
         for (int i = 0; i < myHero.SLOTS; i++) {
             if (myHero.equippedItems[i] != null) {
                 // I will repopulate this later HIGH PRIORITY
-               // thisScreen.gbi.drawImage(myHero.equippedItems[i].image, ((myWidth / columns) * 10) + 20, ((myHeight / rows) * i) + 20, (int) (myWidth * 0.8) / columns, (int) (myHeight * 0.8) / rows, null);
+                myRectangle.set(((myWidth / columns) * 10) + 20, ((myHeight / rows) * i) + 20, (int) (myWidth * 0.8) / columns, (int) (myHeight * 0.8) / rows);
+               canvas.drawBitmap(myHero.equippedItems[i].image, null, myRectangle, null);
             }
         }
 

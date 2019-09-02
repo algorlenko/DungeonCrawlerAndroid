@@ -46,8 +46,8 @@ public class ShopState extends GameState { // completely fix this shop state asa
         rows = (int) Math.sqrt(heroInventory.storageSpace);
         columns = rows;
         hoveredSlot = -1;
-     //   menuImage = generateImage(R.drawable.tempshopkeep);
-        menuImage = generateImage(R.drawable.staff_mummy);
+        menuImage = generateImage(R.drawable.tempshopkeep);
+        //menuImage = generateImage(R.drawable.staff_mummy);
         selectedSlot = -1;
         shopStock = new InventoryItem[STOCKSIZE];
         initStock();

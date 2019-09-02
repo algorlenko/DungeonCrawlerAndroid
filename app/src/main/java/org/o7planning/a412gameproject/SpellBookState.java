@@ -47,8 +47,8 @@ public class SpellBookState extends GameState {
         rows = (int) Math.sqrt(heroInventory.storageSpace);
         columns = rows;
         hoveredSlot = -1;
-        //menuImage = generateImage(R.drawable.bookcropped);
-        menuImage = generateImage(R.drawable.staff_mummy);
+        menuImage = generateImage(R.drawable.bookcropped);
+        //menuImage = generateImage(R.drawable.staff_mummy);
         selectedSlot = -1;
         myEngine = passedEngine;
         teleportSpell = new Spell(myEngine, "Teleport", R.drawable.controlled_blink, 30);
@@ -63,17 +63,17 @@ public class SpellBookState extends GameState {
         //  thisScreen.gbi.drawString(("This item is Level " + myTestItem.powerLevel), 50, 40);
         //}
 
-        int myHeight = thisScreen.myBufferedDimension.getHeight();
-        int myWidth = thisScreen.myBufferedDimension.getWidth() / 2;
-        thisScreen.canvas.drawBitmap(menuImage, null, new Rect(0,0, myHeight * 1, myWidth * 2), null);
-        drawSpells(myWidth, myHeight);
-        drawDescription(myWidth, myHeight);
+        int myHeight = canvas.getHeight();
+        int myWidth = canvas.getWidth() / 2;
+        canvas.drawBitmap(menuImage, null, new Rect(0,0, myWidth * 2, myHeight * 1), null);
+        drawSpells(myWidth, myHeight, canvas);
+        //drawDescription(myWidth, myHeight);
     }
 
-    public void drawSpells(int myWidth, int myHeight) {
-       // thisScreen.gbi.drawImage(teleportSpell.spellImage, 100, 100, myWidth / 3, myHeight / 3, null); fix these asap HIGH PRIORITY
-       // thisScreen.gbi.drawImage(arcaneBlastSpell.spellImage, 1000, 100, myWidth / 3, myHeight / 3, null);
-        //thisScreen.gbi.drawImage(raiseSkeletonSpell.spellImage, 100, myHeight / 2, myWidth / 3, myHeight / 3, null);
+    public void drawSpells(int myWidth, int myHeight, Canvas canvas) {
+       canvas.drawBitmap(teleportSpell.spellImage, null, new Rect(100, 100, myWidth/3+100, myHeight/3+100), null);
+        canvas.drawBitmap(arcaneBlastSpell.spellImage, null, new Rect(1000, 100, myWidth/3+1000, myHeight/3+100), null);
+        canvas.drawBitmap(raiseSkeletonSpell.spellImage, null, new Rect(100,  myHeight / 2, myWidth/3+ 100, myHeight/3 + myHeight/2), null); //(100, 100) startpoint
     }
 
     public void drawDescription(int myWidth, int myHeight) {
@@ -141,20 +141,22 @@ public class SpellBookState extends GameState {
     }
 
     public void mouseClicked(MotionEvent e) {
-        int chosenSpell = calculateSpell((int) e.getX(), (int) e.getY());
-        if (chosenSpell == 1 && myHero.mana >= 30) {
-            myEngine.selectedSpell = teleportSpell; // or this could be myHero.selectedSpell
-            //thisScreen.changeCursor(myEngine.selectedSpell.spellImage);
-            myGSM.setState(0); // Back to adventure screen
-        } else if (chosenSpell == 2 && myHero.mana >= 20) {
-            myEngine.selectedSpell = arcaneBlastSpell; // or this could be myHero.selectedSpell
-           // thisScreen.changeCursor(myEngine.selectedSpell.spellImage);
-            myGSM.setState(0); // Back to adventure screen
-        } else if (chosenSpell == 3 && myHero.mana >= 50) {
-            myEngine.selectedSpell = raiseSkeletonSpell; // or this could be myHero.selectedSpell
-           // thisScreen.changeCursor(myEngine.selectedSpell.spellImage);
-            myGSM.setState(0); // Back to adventure screen
+        if (e.getAction() == MotionEvent.ACTION_DOWN) {
+            int chosenSpell = calculateSpell((int) e.getX(), (int) e.getY());
+            if (chosenSpell == 1 && myHero.mana >= 30) {
+                myEngine.selectedSpell = teleportSpell; // or this could be myHero.selectedSpell
+                //thisScreen.changeCursor(myEngine.selectedSpell.spellImage);
+                myGSM.setState(0); // Back to adventure screen
+            } else if (chosenSpell == 2 && myHero.mana >= 20) {
+                myEngine.selectedSpell = arcaneBlastSpell; // or this could be myHero.selectedSpell
+                // thisScreen.changeCursor(myEngine.selectedSpell.spellImage);
+                myGSM.setState(0); // Back to adventure screen
+            } else if (chosenSpell == 3 && myHero.mana >= 50) {
+                myEngine.selectedSpell = raiseSkeletonSpell; // or this could be myHero.selectedSpell
+                // thisScreen.changeCursor(myEngine.selectedSpell.spellImage);
+                myGSM.setState(0); // Back to adventure screen
 
+            }
         }
     }
 
