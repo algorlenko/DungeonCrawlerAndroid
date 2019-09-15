@@ -14,10 +14,10 @@ public class InventoryItem {
     String itemDescription;
     boolean isSellable;
     long goldValue;
-GameScreen thisScreen;
+GameEngine myEngine;
 
-    public InventoryItem(int myImageName, String myDescription, String myItemName, GameScreen myScreen) throws IOException {
-        thisScreen = myScreen;
+    public InventoryItem(int myImageName, String myDescription, String myItemName, GameEngine passedEngine) {
+        myEngine = passedEngine;
         itemName = myItemName;
         imageName = myImageName;
         image = generateImage(imageName);
@@ -26,8 +26,8 @@ GameScreen thisScreen;
         goldValue = 100;
     }
 
-    public Bitmap generateImage(int myImageName) throws IOException {
-        return thisScreen.generateImage(myImageName);
+    public Bitmap generateImage(int myImageName) {
+        return myEngine.thisScreen.generateImage(myImageName);
     }
 
 }

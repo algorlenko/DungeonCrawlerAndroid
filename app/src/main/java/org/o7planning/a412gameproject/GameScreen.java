@@ -36,7 +36,7 @@ public class GameScreen extends SurfaceView implements SurfaceHolder.Callback{
     GameThread gameThread;
 
     // Image Stuff
-Canvas canvas;
+//Canvas canvas;
 
     public GameScreen(Context context) throws IOException {
 
@@ -77,12 +77,11 @@ Canvas canvas;
 
     private void initScreen() throws IOException {
         myBufferedDimension = new Size(1920, 1080);
-        myStatus = new StatusScreen();
         //engine = new GameEngine(this);
         //currentTiles = engine.myTiles;
         this.setFocusable(true);
 
-        canvas = new Canvas();
+  //      canvas = new Canvas(); MIGHT BE ESSENTIAL LIKELY HAVE TO RESTORE
      //   buffImage = new BufferedImage(myBufferedDimension.width, myBufferedDimension.height, BufferedImage.TYPE_INT_RGB);
        // gbi = buffImage.createGraphics();
 
@@ -104,9 +103,7 @@ Canvas canvas;
     @Override
     public void draw(Canvas canvas)  {
 
- //      canvas.drawColor(Color.BLUE);
         super.draw(canvas);
-     //   canvas.drawColor(Color.BLUE);
 
     }
 

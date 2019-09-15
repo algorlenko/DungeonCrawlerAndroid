@@ -29,19 +29,19 @@ public class Spell {
 
     public void castSpell(Unit castingUnit, int targetedX, int targetedY) {
         if (spellName == "Teleport") {
-            teleportAction(castingUnit, targetedX, targetedY, myEngine.myTiles, myEngine.dungeonColumns, myEngine.dungeonRows);
+            teleportAction(castingUnit, targetedX, targetedY);
         }
 
         if (spellName == "Arcane Blast") {
-            arcaneBlastAction(castingUnit, targetedX, targetedY, myEngine.myTiles, myEngine.dungeonColumns, myEngine.dungeonRows);
+            arcaneBlastAction(castingUnit, targetedX, targetedY);
         }
         if (spellName == "Raise Skeleton") {
-            summonSkeletonAction(castingUnit, targetedX, targetedY, myEngine.myTiles, myEngine.dungeonColumns, myEngine.dungeonRows);
+            summonSkeletonAction(castingUnit, targetedX, targetedY);
         }
     }
 
-    public void teleportAction(Unit castingUnit, int destinationX, int destinationY, Tile[][] myTiles, int dungeonColumns, int dungeonRows) {
-        boolean teleportSuccess = castingUnit.moveTo(destinationX, destinationY, myTiles, dungeonColumns, dungeonRows);
+    public void teleportAction(Unit castingUnit, int destinationX, int destinationY) {
+        boolean teleportSuccess = castingUnit.moveTo(destinationX, destinationY);
         if (teleportSuccess && castingUnit == myEngine.myHero) {
             myEngine.myStatus.pushMessage("You have Teleported.");
           //  myEngine.thisScreen.resetCursor();
@@ -55,14 +55,14 @@ public class Spell {
         }
     }
 
-    public void arcaneBlastAction(Unit castingUnit, int destinationX, int destinationY, Tile[][] myTiles, int dungeonColumns, int dungeonRows) {
+    public void arcaneBlastAction(Unit castingUnit, int destinationX, int destinationY) {
         boolean blastSuccess;
-        if (myTiles[destinationX][destinationY].myContents[UNITLAYER] != null) {
+        if (myEngine.myTiles[destinationX][destinationY].myContents[UNITLAYER] != null) {
             if (castingUnit == myEngine.myHero) {
-                if (myTiles[destinationX][destinationY].myContents[UNITLAYER] instanceof Monster) {
-                    Monster target = (Monster) myTiles[destinationX][destinationY].myContents[UNITLAYER];
+                if (myEngine.myTiles[destinationX][destinationY].myContents[UNITLAYER] instanceof Monster) {
+                    Monster target = (Monster) myEngine.myTiles[destinationX][destinationY].myContents[UNITLAYER];
                     try {
-                        target.takeDamage(myEngine.myHero.intelligence, myTiles);
+                        target.takeDamage(myEngine.myHero.intelligence);
                     } catch (Exception exc) {
 
                     }
@@ -80,23 +80,18 @@ public class Spell {
         }
     }
 
-    public void summonSkeletonAction(Unit castingUnit, int destinationX, int destinationY, Tile[][] myTiles, int dungeonColumns, int dungeonRows) {
+    public void summonSkeletonAction(Unit castingUnit, int destinationX, int destinationY) {
       //  boolean summonSuccess;
-        if (destinationX < dungeonColumns && destinationX >= 0 && destinationY < dungeonRows && destinationY >= 0) {
-            if (myTiles[destinationX][destinationY].myContents[UNITLAYER] == null) {
-                try
-                {
+        if (destinationX < myEngine.dungeonColumns && destinationX >= 0 && destinationY < myEngine.dungeonRows && destinationY >= 0) {
+            if (myEngine.myTiles[destinationX][destinationY].myContents[UNITLAYER] == null) {
+
                 myEngine.friendlyCreatures.add(new FriendlyCreature(destinationX, destinationY, R.drawable.death_knight, myEngine.myHero.intelligence * 3, myEngine.myHero.intelligence, myEngine));
                 myEngine.myStatus.pushMessage("You have Summoned an Undead Ally.");
         //    myEngine.thisScreen.resetCursor();
             myEngine.selectedSpell = null; // this could also be myHero.selectedSpell
             castingUnit.mana -= manaCost; 
             myEngine.successfulTurn();
-                }
-                catch(Exception exc)
-                        {
-                            
-                        }
+
             }
             else
             {

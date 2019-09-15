@@ -6,54 +6,55 @@ import java.util.Random;
 
 public class FriendlyCreature extends Unit {
 
-    public GameEngine myEngine;
 
-    public FriendlyCreature(int myX, int myY, int imageName, int myMaxHP, int myBaseAttackPower, GameEngine publicEngine) throws IOException {
 
-        super(myX, myY, publicEngine.myTiles, imageName, myMaxHP, publicEngine.thisScreen);
+    public FriendlyCreature(int myX, int myY, int imageName, int myMaxHP, int myBaseAttackPower, GameEngine passedEngine) {
+
+
+
+        super(myX, myY, imageName, myMaxHP, passedEngine);
+        attackPower = myBaseAttackPower;
 
         // myDrops[0] = myLoot;
-        attackPower = myBaseAttackPower;
-        myEngine = publicEngine;
 
     }
 
-    public void move(int dx, int dy, Tile myTiles[][], int dungeonColumns, int dungeonRows) {
+    public void move(int dx, int dy) {
         int futureX = x + dx;
         int futureY = y + dy;
         int pastX = x;
         int pastY = y;
 
-        if (!(futureX < 0 || futureX > dungeonColumns - 1 || futureY < 0 || futureY > dungeonRows - 1)) {
-            if (myTiles[futureX][futureY].myContents[myLayer] == null) {
+        if (!(futureX < 0 || futureX > myEngine.dungeonColumns - 1 || futureY < 0 || futureY > myEngine.dungeonRows - 1)) {
+            if (myEngine.myTiles[futureX][futureY].myContents[myLayer] == null) {
                 x = futureX;
                 y = futureY;
-                myTiles[pastX][pastY].myContents[myLayer] = null;
-                myTiles[pastX][pastY].imageName[myLayer] = R.drawable.empty;
+                myEngine.myTiles[pastX][pastY].myContents[myLayer] = null;
+                myEngine.myTiles[pastX][pastY].imageName[myLayer] = R.drawable.empty;
 
-                loadIntoTile(x, y, myTiles);
+                loadIntoTile(x, y);
             }
         }
     }
 
-    public void aiAction(Tile myTiles[][], StatusScreen myStatus) throws IOException {
+    public void aiAction() {
         MapObject target = null;
-        target = scanInRadius(1, myTiles); // first we try to scan for enemy monsters to attack
+        target = scanInRadius(1); // first we try to scan for enemy monsters to attack
         // Random rand = new Random();
 
         if (target != null) {
             Unit unitTarget = (Unit) target;
-            attack(unitTarget, myTiles);
-            myStatus.pushMessage("Your Ally has attacked the Enemy for " + attackPower + " damage.");
+            attack(unitTarget);
+            myEngine.myStatus.pushMessage("Your Ally has attacked the Enemy for " + attackPower + " damage.");
             return;
         } else {
-            target = scanForHero(4, myTiles); // if the hero is close follow him
+            target = scanForHero(4); // if the hero is close follow him
             if (target != null) {
                 followTarget(target);
                 return;
             }
 
-            target = scanInRadius(4, myTiles); // scan for close by monsters to engage
+            target = scanInRadius(4); // scan for close by monsters to engage
             if (target != null) {
                 followTarget(target);
                 return;
@@ -80,20 +81,20 @@ public class FriendlyCreature extends Unit {
             yMove = (int) Math.signum(yMove);
             xMove = 0;
         }
-        move(xMove, yMove, myEngine.myTiles, myEngine.dungeonColumns, myEngine.dungeonRows);
+        move(xMove, yMove);
     }
 
-    public void attack(Unit recipient, Tile myTiles[][]) throws IOException {
-        recipient.takeDamage(attackPower, myTiles);
+    public void attack(Unit recipient){
+        recipient.takeDamage(attackPower);
     }
 
-    public MapObject scanInRadius(int myRadius, Tile myTiles[][]) { // this scans for a monster within the designated radius
+    public MapObject scanInRadius(int myRadius) { // this scans for a monster within the designated radius
 
         for (int i = -myRadius; i <= myRadius; i++) {
             for (int j = -myRadius; j <= myRadius; j++) {
-                if (!(x + i < 0 || x + i > myTiles.length - 1 || y + j < 0 || y + j > myTiles[0].length - 1 || (i == 0 && j == 0))) {
-                    if (myTiles[x + i][y + j].myContents[myLayer] instanceof Monster) {
-                        return myTiles[x + i][y + j].myContents[myLayer];
+                if (!(x + i < 0 || x + i > myEngine.myTiles.length - 1 || y + j < 0 || y + j > myEngine.myTiles[0].length - 1 || (i == 0 && j == 0))) {
+                    if (myEngine.myTiles[x + i][y + j].myContents[myLayer] instanceof Monster) {
+                        return myEngine.myTiles[x + i][y + j].myContents[myLayer];
                     }
                 }
             }
@@ -101,13 +102,13 @@ public class FriendlyCreature extends Unit {
         return null;
     }
 
-    public MapObject scanForHero(int myRadius, Tile myTiles[][]) {
+    public MapObject scanForHero(int myRadius) {
 
         for (int i = -myRadius; i <= myRadius; i++) {
             for (int j = -myRadius; j <= myRadius; j++) {
-                if (!(x + i < 0 || x + i > myTiles.length - 1 || y + j < 0 || y + j > myTiles[0].length - 1 || (i == 0 && j == 0))) {
-                    if (myTiles[x + i][y + j].myContents[myLayer] instanceof Hero) {
-                        return myTiles[x + i][y + j].myContents[myLayer];
+                if (!(x + i < 0 || x + i > myEngine.myTiles.length - 1 || y + j < 0 || y + j > myEngine.myTiles[0].length - 1 || (i == 0 && j == 0))) {
+                    if (myEngine.myTiles[x + i][y + j].myContents[myLayer] instanceof Hero) {
+                        return myEngine.myTiles[x + i][y + j].myContents[myLayer];
                     }
                 }
             }
@@ -116,8 +117,8 @@ public class FriendlyCreature extends Unit {
     }
 
     @Override
-    public void deathFunction(Tile myTiles[][]) throws IOException {
-        super.deathFunction(myTiles);
+    public void deathFunction(){
+        super.deathFunction();
         // if (myDrops != null) {
 
         // }

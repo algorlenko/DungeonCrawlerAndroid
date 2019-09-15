@@ -12,8 +12,8 @@ public class Door extends MapObject implements Useable {
     Bitmap closedImage;
     int closedImageString;
 
-    public Door(int myX, int myY, Tile myTiles[][], GameScreen myScreen) throws IOException {
-        thisScreen = myScreen;
+    public Door(int myX, int myY, GameEngine passedEngine) throws IOException {
+        myEngine = passedEngine;
         isOpen = false;
         myLayer = 3;
         closedImageString = R.drawable.runed_door;
@@ -26,34 +26,34 @@ public class Door extends MapObject implements Useable {
         image = closedImage;
         x = myX;
         y = myY;
-        loadIntoTile(x, y, myTiles);
+        loadIntoTile(x, y);
     }
 
-    public int tryUse(GameEngine myEngine) {
+    public int tryUse() {
         if (isOpen == false) {
-            return tryOpen(myEngine.myHero, myEngine.myStatus, myEngine.myTiles);
+            return tryOpen();
         } else {
             return 2;
         }
     }
 
-    public int tryOpen(Hero myHero, StatusScreen myStatus, Tile myTiles[][]) {
+    public int tryOpen() {
         if (isOpen == false) {
-            if (myHero.myInventory.searchFor("L1Key") != -1) {
+            if (myEngine.myHero.myInventory.searchFor("L1Key") != -1) {
                 isOpen = true;
                 unitImage = openImageString;
                 image = openImage;
-                loadIntoTile(x, y, myTiles);
+                loadIntoTile(x, y);
                 int removedItem;
-                removedItem = myHero.myInventory.searchFor("L1Key");
-                myHero.myInventory.clearSlot(removedItem);
-                myStatus.pushMessage("You have unlocked the door using your key.");
+                removedItem = myEngine.myHero.myInventory.searchFor("L1Key");
+                myEngine.myHero.myInventory.clearSlot(removedItem);
+                myEngine.myStatus.pushMessage("You have unlocked the door using your key.");
                 return 1;
             }
-            myStatus.pushMessage("You do not have the key.");
+            myEngine.myStatus.pushMessage("You do not have the key.");
             return -1;
         }
-        myStatus.pushMessage("The Door is already open.");
+        myEngine.myStatus.pushMessage("The Door is already open.");
         return -1;
     }
 }

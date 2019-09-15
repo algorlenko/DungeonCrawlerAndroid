@@ -59,9 +59,11 @@
     int experimentalHeight;
     int experimentalWidth;
 
+        public Canvas myGraphic;
+
 
         public GameEngine(GameScreen myScreen, GameStateManager passedGSM) throws IOException {
-
+myGraphic = new Canvas(); // this is a test
             experimentalHeight = 100;
             experimentalWidth = 100;
 
@@ -79,11 +81,14 @@
             Typeface GeneralFont = Typeface.defaultFromStyle(Typeface.NORMAL);
          //   myScreen.canvas.setTypeFace(GeneralFont);
 
+
+
+
             myGSM = passedGSM;
             //emptyImage = generateImage
             for (int i = 0; i < dungeonColumns; i++) {
                 for (int j = 0; j < dungeonRows; j++) {
-                    myTiles[i][j] = new Tile(i, j, R.drawable.ground_dirt_dark_3, thisScreen);
+                    myTiles[i][j] = new Tile(i, j, R.drawable.ground_dirt_dark_3, this);
                     //myTiles[i][j].syncTileWithScreen();
                 }
 
@@ -100,19 +105,19 @@
 
             friendlyCreatures = new ArrayList<FriendlyCreature>(); // Gorlenko added this
             myMonsters = new ArrayList<Monster>(); // Create an ArrayList object
-            myMonsters.add(new Monster(4, 4, myTiles, R.drawable.beetle_fire_giant_1, new Equipment(R.drawable.mace3, 10,0,0, "Mace of Power : damage + 10", "MaceOfPower", "Weapon", thisScreen), 100, thisScreen));
-            myMonsters.add(new Monster(4, 3, myTiles, R.drawable.cultist_3, new InventoryItem(R.drawable.key_gold, "The key to the next level.", "L1Key", thisScreen), 100, thisScreen));
+            myMonsters.add(new Monster(4, 4, R.drawable.beetle_fire_giant_1, new Equipment(R.drawable.mace3, 10,0,0, "Mace of Power : damage + 10", "MaceOfPower", "Weapon", this), 100, this));
+            myMonsters.add(new Monster(4, 3, R.drawable.cultist_3, new InventoryItem(R.drawable.key_gold, "The key to the next level.", "L1Key", this), 100, this));
             myWalls = new ArrayList<Wall>();
 
             for (int i = 1; i < dungeonColumns - 1; i++)
             {
-                myWalls.add(new Wall(i, 0, myTiles, R.drawable.wall_hedge_15, thisScreen));
+                myWalls.add(new Wall(i, 0, R.drawable.wall_hedge_15, this));
             }
             for (int i = 0; i < dungeonColumns; i++)
             {
                 for(int j=0;j<dungeonRows;j++){
                     if( j==dungeonRows-1 || i==0 || i==dungeonColumns-1)
-                        myWalls.add(new Wall(i, j, myTiles, R.drawable.wall_hedge_7, thisScreen));
+                        myWalls.add(new Wall(i, j, R.drawable.wall_hedge_7, this));
                 }
 
             }
@@ -120,10 +125,10 @@
     //        myWalls.add(new Wall(2, 2, myTiles, R.drawable.Floor/uf_terrain/wall_hedge_15));
     //        myWalls.add(new Wall(3, 3, myTiles, R.drawable.Floor/uf_terrain/wall_hedge_15));
 
-            myHero = new Hero(1, 1, myTiles, R.drawable.dknight_1, 100, thisScreen);
+            myHero = new Hero(1, 1, R.drawable.dknight_1, 100, this);
             turnHolder = myHero;
-            myStatus = new StatusScreen();
-            myDoor = new Door(2, 2, myTiles, thisScreen);
+            myStatus = new StatusScreen(this);
+            myDoor = new Door(2, 2, this);
             localShopKeep = new ShopKeeper(3, 3, this);
             this.myStatus.pushMessage("You wake up in an open garden. How ");
             this.myStatus.pushMessage("did you get here? There is a crazy ");
@@ -224,7 +229,7 @@
         public void attemptUsage(Point selectedTile) {
             if (myTiles[selectedTile.x][selectedTile.y].myContents[UNITLAYER] instanceof Useable) {
                 if (selectedTile.x <= myHero.x + 1 && selectedTile.x >= myHero.x - 1 && selectedTile.y <= myHero.y + 1 && selectedTile.y >= myHero.y - 1) {
-                    int useResult = ((Useable) myTiles[selectedTile.x][selectedTile.y].myContents[UNITLAYER]).tryUse(this);
+                    int useResult = ((Useable) myTiles[selectedTile.x][selectedTile.y].myContents[UNITLAYER]).tryUse();
                     if (useResult == 3) // if the object you used was a shopkeeper
                     {
                         successfulTurn();
@@ -346,7 +351,7 @@
                 selectedAlly = (FriendlyCreature) turnHolder; //this may need improvments
                 try
                 {
-                selectedAlly.aiAction(myTiles, myStatus);
+                selectedAlly.aiAction();
                 }
                 catch(Exception exc)
                 {
@@ -366,7 +371,7 @@
         }
 
 
-        public void monsterTurn() throws IOException {
+        public void monsterTurn() {
             for (int i = 0; i < myMonsters.size(); i++) {
 
                 if (myMonsters.get(i).isAlive == false) {
@@ -386,7 +391,7 @@
 
                 turnHolder = myMonsters.get(i);
                 selectedMonster = (Monster) turnHolder; //this may need improvments
-                selectedMonster.aiAction(myTiles, myStatus);
+                selectedMonster.aiAction();
 
                 if (myMonsters.get(i).isAlive == false) {
                     myMonsters.remove(i);
@@ -415,34 +420,51 @@
     */
         public void mouseClicked(MotionEvent e) {
             if (e.getAction() == MotionEvent.ACTION_DOWN) {
+
+                if (e.getY() >= thisScreen.getHeight() * 9 / 10) // Alex added this statement
+                {
+                    spellButtonClicked();
+                    return;
+                }
+
             if (e.getY() >= thisScreen.getHeight() * 4 / 5) // Alex added this statement
             {
-               spellButtonClicked();
+                myGSM.setState(1); // takes us to Inventory
                 return;
            }
+
+
             // I might remove this condition
 
                 Point selectedTile = calculateTile((int) e.getX(), (int) e.getY());
                 if (selectedTile.x < dungeonColumns && selectedTile.x >= 0 && selectedTile.y < dungeonRows && selectedTile.y >= 0) {
-                    if (myTiles[selectedTile.x][selectedTile.y].myContents[UNITLAYER] == null) {
-                        myHero.move(selectedTile.x - myHero.x, selectedTile.y - myHero.y, myTiles, dungeonColumns, dungeonRows, myStatus); // You need to click to move
-                        return;
-                    }
+// TODO fix any other errors hanging out here, i had a rediculous one in here so there could be many more logic errors, delete this todo if there aren't
                     if (myHero.isAlive) {
                         if (turnHolder == myHero) {
                             if (selectedSpell == null) // this condition was added by Alex
                             {
-                                attemptAttack(selectedTile);
-                                attemptUsage(selectedTile);
-                            } else // this else was added by Alex
+                                if ((selectedTile.x - myHero.x) * (selectedTile.x - myHero.x) < 4 && (selectedTile.y - myHero.y) * (selectedTile.y - myHero.y) < 4) {
+                                    if (myTiles[selectedTile.x][selectedTile.y].myContents[UNITLAYER] == null || myTiles[selectedTile.x][selectedTile.y].myContents[UNITLAYER] instanceof FriendlyCreature) {
+
+                                        myHero.heroMove(selectedTile.x - myHero.x, selectedTile.y - myHero.y);
+                                        // TODO clean up the entire hero move function.
+                                        //myHero.move(selectedTile.x - myHero.x, selectedTile.y - myHero.y, myTiles, dungeonColumns, dungeonRows, myStatus); // You need to click to move
+                                        //TODO the AI is a little funky
+                                        successfulTurn();
+                                        monsterTurn();
+
+                                        // TODO clean this up into one elegant hero move function
+                                        return;
+                                    }
+                                    attemptAttack(selectedTile);
+                                    attemptUsage(selectedTile);
+                                }
+                            }else // this else was added by Alex
                             {
                                 selectedSpell.castSpell(myHero, selectedTile.x, selectedTile.y);
                                 if (turnHolder instanceof Monster) {
-                                    try {
-                                        monsterTurn();
-                                    } catch (Exception exc) {
+                                    monsterTurn();
 
-                                    }
                                 }
                             }
                         }
@@ -454,7 +476,7 @@
 
         public void spellButtonClicked() // Alex added this
         {
-            myGSM.setState(1); // goes to SpellBook
+            myGSM.setState(6); // goes to SpellBook
         }
 
         public Point calculateTile(int x, int y) {
@@ -473,12 +495,15 @@
 
         public void draw(Canvas canvas) throws IOException {
            // Canvas canvas = thisScreen.canvas;
-            drawTiles(canvas);
-            drawStatus(canvas);
+
+            myGraphic = canvas;
+
+            drawTiles();
+            drawStatus();
            // drawHovering(myGraphic);
         }
 
-        private void drawTiles(Canvas myGraphic) {
+        private void drawTiles() {
 
          //   int myHeight = (thisScreen.myBufferedDimension.getHeight() / 5) * 4;
          //   int myWidth = thisScreen.myBufferedDimension.getWidth();
@@ -523,13 +548,13 @@
             }
         }*/
 
-        private void drawStatus(Canvas myGraphic) throws IOException {
+        private void drawStatus() throws IOException {
 
             //int myHeight = (thisScreen.myBufferedDimension.getHeight() / 5) * 4;
             //  int myWidth = thisScreen.myBufferedDimension.getWidth();
             int myHeight = (myGraphic.getHeight() / 5) * 4;
             int myWidth = myGraphic.getWidth();
-            myStatus.drawStatus(myGraphic, statusImage, myWidth, myHeight, thisScreen, myHero);
+            myStatus.drawStatus();
         }
 
     }

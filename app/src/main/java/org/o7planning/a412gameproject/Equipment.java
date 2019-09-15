@@ -11,8 +11,8 @@ public class Equipment extends InventoryItem {
     int intelligenceLevel;
     String equipType;
 
-    public Equipment(int myImageName, int myPowerLevel, int myArmourLevel, int myIntellegenceLevel, String myDescription, String myItemName, String myType, GameScreen myScreen) throws IOException {
-        super(myImageName, myDescription, myItemName, myScreen);
+    public Equipment(int myImageName, int myPowerLevel, int myArmourLevel, int myIntellegenceLevel, String myDescription, String myItemName, String myType, GameEngine passedEngine) {
+        super(myImageName, myDescription, myItemName, passedEngine);
         powerLevel = myPowerLevel;
         armourLevel =myArmourLevel;
         intelligenceLevel = myIntellegenceLevel; 

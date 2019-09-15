@@ -24,7 +24,7 @@ public class PauseMenuState extends GameState {
     public void draw(Canvas canvas) {
 
         // thisScreen.gbi.drawString(("Presss Enter To return to the Game. Press Z if you would like to exit the game."), 100, 100);
-        thisScreen.canvas.drawText("This is the pause menu.", 50, 50, null);
+       // thisScreen.canvas.drawText("This is the pause menu.", 50, 50, null);
         //thisScreen.gbi.drawImage(menuImage, 0, 0, thisScreen.myBufferedDimension.width, thisScreen.myBufferedDimension.height, null); repopulate this later.
     }
 

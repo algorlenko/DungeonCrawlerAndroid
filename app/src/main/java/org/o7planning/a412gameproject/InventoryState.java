@@ -33,6 +33,9 @@ public class InventoryState extends GameState {
 
     public final int BOOTS = 5;
 
+    public int myHeight;
+public int myWidth;
+
     public InventoryState(GameScreen myScreen, GameStateManager passedGSM, Hero theHero) throws IOException {
         myRectangle = new Rect();
         thisScreen = myScreen;
@@ -55,16 +58,16 @@ public class InventoryState extends GameState {
         //}
 
 
-        int myHeight = canvas.getHeight();
-        int myWidth = canvas.getWidth() / 2;
+        myHeight = canvas.getHeight();
+        myWidth = canvas.getWidth() / 2;
         myRectangle.set(0,0,  myWidth * 2, myHeight * 1);
         canvas.drawBitmap(menuImage, null, myRectangle, null);
-        drawInventory(myWidth, myHeight, canvas);
-        drawEquipped(myWidth, myHeight, canvas);
+        drawInventory(canvas);
+        drawEquipped(canvas);
        // drawDescription(myWidth, myHeight);
     }
 
-    public void drawInventory(int myWidth, int myHeight, Canvas canvas) {
+    public void drawInventory(Canvas canvas) {
 
         int itemNumber = 0;
 
@@ -85,11 +88,11 @@ public class InventoryState extends GameState {
         }
     }
 
-    public void drawEquipped(int myWidth, int myHeight, Canvas canvas) {
+    public void drawEquipped(Canvas canvas) {
         for (int i = 0; i < myHero.SLOTS; i++) {
             if (myHero.equippedItems[i] != null) {
                 // I will repopulate this later HIGH PRIORITY
-                myRectangle.set(((myWidth / columns) * 10) + 20, ((myHeight / rows) * i) + 20, (int) (myWidth * 0.8) / columns, (int) (myHeight * 0.8) / rows);
+                myRectangle.set(((myWidth / columns) * 10) , ((myHeight / rows) * i) , (int) (myWidth * (10 + 0.8) ) / columns, (int) (myHeight * ( i + 0.8) ) / rows);
                canvas.drawBitmap(myHero.equippedItems[i].image, null, myRectangle, null);
             }
         }
@@ -158,8 +161,6 @@ public class InventoryState extends GameState {
     }*/
 
     public int calculateSlot(int x, int y) {
-        int myWidth = thisScreen.getWidth() / 2;
-        int myHeight = thisScreen.getHeight();
 
         if (x * columns / myWidth < columns && y * rows / myHeight < rows) {
             return (x * columns / myWidth) + ((y * rows / myHeight) * columns);
@@ -168,44 +169,56 @@ public class InventoryState extends GameState {
         } else {
             return -1;
         }
+
     }
 
     public void mouseClicked(MotionEvent e) {
-        hoveredSlot = calculateSlot((int) e.getX(), (int) e.getY());
 
-        if (hoveredSlot > -1) {
-            if (hoveredSlot < heroInventory.storageSpace) // this part is buggy
+        if (e.getAction() == MotionEvent.ACTION_DOWN) {
+
+            // this is to exit Inventory State for now, I may develop a better system later
+            if (e.getY() >= (myHeight * 5) / 6) // Alex added this statement
             {
+                lightlyResetInventory();
+                myGSM.setState(0); // Back to adventure screen
+                return;
+            }
+            hoveredSlot = calculateSlot((int) e.getX(), (int) e.getY());
+            if (hoveredSlot > -1) {
+                if (hoveredSlot < heroInventory.storageSpace) // this part is buggy
+                {
 
-                if (heroInventory.items[hoveredSlot] != null && selectedSlot == -1) {
-                    selectedSlot = hoveredSlot;
-               //     thisScreen.changeCursor(heroInventory.items[selectedSlot].image);
-                } else if (selectedSlot > -1) {
-                    if (selectedSlot < heroInventory.storageSpace) {
-                        swapItems(selectedSlot, hoveredSlot);
-                    } else if (selectedSlot >= heroInventory.storageSpace) {
-                        if (heroInventory.items[hoveredSlot] == null) {
+                    if (heroInventory.items[hoveredSlot] != null && selectedSlot == -1) {
+                        selectedSlot = hoveredSlot;
+                        //     thisScreen.changeCursor(heroInventory.items[selectedSlot].image);
+                    } else if (selectedSlot > -1) {
+                        if (selectedSlot < heroInventory.storageSpace) {
                             swapItems(selectedSlot, hoveredSlot);
-                        } else {
-                            if (attemptEquippingItem(hoveredSlot, selectedSlot - heroInventory.storageSpace)) {
-                                lightlyResetInventory();
+                        } else if (selectedSlot >= heroInventory.storageSpace) {
+                            if (heroInventory.items[hoveredSlot] == null) {
+                                swapItems(selectedSlot, hoveredSlot);
+                            } else {
+                                if (attemptEquippingItem(hoveredSlot, selectedSlot - heroInventory.storageSpace)) {
+                                    lightlyResetInventory();
+                                }
                             }
                         }
                     }
-                }
-            } else if (hoveredSlot >= heroInventory.storageSpace) {
-                if (selectedSlot != -1) {
-                    if (attemptEquippingItem(selectedSlot, hoveredSlot - heroInventory.storageSpace)) {
-                        lightlyResetInventory();
+                } else if (hoveredSlot >= heroInventory.storageSpace) {
+                    if (selectedSlot != -1) {
+                        if (attemptEquippingItem(selectedSlot, hoveredSlot - heroInventory.storageSpace)) {
+                            lightlyResetInventory();
+                        }
+                    } else if (myHero.equippedItems[hoveredSlot - heroInventory.storageSpace] != null) {
+                        selectedSlot = hoveredSlot;
+                        //    thisScreen.changeCursor(myHero.equippedItems[hoveredSlot - heroInventory.storageSpace].image);
                     }
-                } else if (myHero.equippedItems[hoveredSlot - heroInventory.storageSpace] != null) {
-                    selectedSlot = hoveredSlot;
-                //    thisScreen.changeCursor(myHero.equippedItems[hoveredSlot - heroInventory.storageSpace].image);
                 }
-            }
 
+            }
         }
     }
+
 
     public void swapItems(int firstSelectedSlot, int secondSelectedSlot) {
         if (selectedSlot != -1) {

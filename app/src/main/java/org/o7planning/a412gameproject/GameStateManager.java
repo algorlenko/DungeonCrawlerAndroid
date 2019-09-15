@@ -88,9 +88,10 @@ public class GameStateManager {
 
 
     public void mouseClicked(MotionEvent e) {
-
-        gameStates.get(currentState).mouseClicked(e);
-
+        //TODO make a decision, either have the checker here, or in the states.
+        if (e.getAction() == MotionEvent.ACTION_DOWN) {
+            gameStates.get(currentState).mouseClicked(e);
+        }
         //   gameStates.get(currentState).draw(Canvas canvas);
         //    myScreen.repaint();
     }

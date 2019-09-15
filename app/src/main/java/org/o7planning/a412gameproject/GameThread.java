@@ -20,7 +20,7 @@ public class GameThread extends Thread {
         long startTime = System.nanoTime();
 
         while(running)  {
-            Canvas canvas= null;
+           Canvas canvas= null;
             try {
                 // Get Canvas from Holder and lock it. OHHHHH this provides the canvas that you need to draw on.
                 canvas = this.surfaceHolder.lockCanvas();

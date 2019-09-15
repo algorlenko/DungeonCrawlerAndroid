@@ -10,8 +10,8 @@ public class Monster extends Unit {
 
     long myBounty;
 
-    public Monster(int myX, int myY, Tile myTiles[][], int myImage, InventoryItem myLoot, int myMaxHP, GameScreen myScreen) throws IOException { // this is the simpler constructor
-        super(myX, myY, myTiles, myImage, myMaxHP, myScreen);
+    public Monster(int myX, int myY, int myImage, InventoryItem myLoot, int myMaxHP, GameEngine passedEngine) throws IOException { // this is the simpler constructor
+        super(myX, myY, myImage, myMaxHP, passedEngine);
         myBounty = 100;
         myDrops = new ArrayList<InventoryItem>();
         if (myLoot != null) {
@@ -24,8 +24,8 @@ public class Monster extends Unit {
 
     }
 
-    public Monster(int myX, int myY, Tile myTiles[][], int myImage, InventoryItem myLoot, int myMaxHP, long itsBounty, GameScreen myScreen) throws IOException { // this will be the more in-depth constructor
-        super(myX, myY, myTiles, myImage, myMaxHP, myScreen);
+    public Monster(int myX, int myY, int myImage, InventoryItem myLoot, int myMaxHP, long itsBounty, GameEngine passedEngine) throws IOException { // this will be the more in-depth constructor
+        super(myX, myY, myImage, myMaxHP, passedEngine);
         myBounty = itsBounty;
         myDrops = new ArrayList<InventoryItem>();
         if (myLoot != null) {
@@ -38,8 +38,8 @@ public class Monster extends Unit {
 
     }
     
-    public Monster(int myX, int myY, Tile myTiles[][], int myImage, InventoryItem myLoot, int myMaxHP, long itsBounty, int myAttack, GameScreen myScreen) throws IOException { // this will be the more in-depth constructor
-        super(myX, myY, myTiles, myImage, myMaxHP, myScreen);
+    public Monster(int myX, int myY, int myImage, InventoryItem myLoot, int myMaxHP, long itsBounty, int myAttack, GameEngine passedEngine) throws IOException { // this will be the more in-depth constructor
+        super(myX, myY, myImage, myMaxHP, passedEngine);
         myBounty = itsBounty;
         myDrops = new ArrayList<InventoryItem>();
         if (myLoot != null) {
@@ -52,20 +52,20 @@ public class Monster extends Unit {
 
     }
 
-    public void move(int dx, int dy, Tile myTiles[][], int dungeonColumns, int dungeonRows) {
+    public void move(int dx, int dy) {
         int futureX = x + dx;
         int futureY = y + dy;
         int pastX = x;
         int pastY = y;
 
-        if (!(futureX < 0 || futureX > dungeonColumns - 1 || futureY < 0 || futureY > dungeonRows - 1)) {
-            if (myTiles[futureX][futureY].myContents[myLayer] == null) {
+        if (!(futureX < 0 || futureX > myEngine.dungeonColumns - 1 || futureY < 0 || futureY > myEngine.dungeonRows - 1)) {
+            if (myEngine.myTiles[futureX][futureY].myContents[myLayer] == null) {
                 x = futureX;
                 y = futureY;
-                myTiles[pastX][pastY].myContents[myLayer] = null;
-                myTiles[pastX][pastY].imageName[myLayer] = R.drawable.empty;
+                myEngine.myTiles[pastX][pastY].myContents[myLayer] = null;
+                myEngine.myTiles[pastX][pastY].imageName[myLayer] = R.drawable.empty;
 
-                loadIntoTile(x, y, myTiles);
+                loadIntoTile(x, y);
             }
         }
     }
@@ -108,20 +108,20 @@ public class Monster extends Unit {
     }
 */
     
-     public void aiAction(Tile myTiles[][], StatusScreen myStatus) throws IOException {
+     public void aiAction() {
         MapObject target = null;
-        target = scanInRadius(1, myTiles); // first we try to see if there is a hero or friendly within attacking range
+        target = scanInRadius(1); // first we try to see if there is a hero or friendly within attacking range
         // Random rand = new Random();
 
         if (target != null) {
             Unit unitTarget = (Unit) target;
-            attack(unitTarget, myTiles);
-            myStatus.pushMessage("The Monster has Attacked dealing " + attackPower + " damage.");
+            attack(unitTarget);
+            myEngine.myStatus.pushMessage("The Monster has Attacked dealing " + attackPower + " damage.");
             return;
         } else {
-            target = scanInRadius(4, myTiles); // if not, we check to see if they are within aggro distance and if we are, we follow them.
+            target = scanInRadius(4); // if not, we check to see if they are within aggro distance and if we are, we follow them.
             if (target != null) {
-followTarget(target, myTiles);
+followTarget(target);
             }
  
         }
@@ -129,7 +129,7 @@ followTarget(target, myTiles);
 
     }
     
-        public void followTarget(MapObject target, Tile[][] myTiles) // I could potentially add in diagonal movement and just generally more intelligent calculation this in particualr also uses sloppier code than the allied creature, the allied Creature class is the gold standard for future work.
+        public void followTarget(MapObject target) // I could potentially add in diagonal movement and just generally more intelligent calculation this in particualr also uses sloppier code than the allied creature, the allied Creature class is the gold standard for future work.
     {
                 int xMove = 0;
         int yMove = 0;
@@ -145,21 +145,21 @@ else
     yMove = (int) Math.signum(yMove);
     xMove = 0;
 }
-            move(xMove, yMove, myTiles, myTiles.length, myTiles[0].length);
+            move(xMove, yMove);
     }
     
     
-    public void attack(Unit recipient, Tile myTiles[][]) throws IOException {
-        recipient.takeDamage(attackPower, myTiles);
+    public void attack(Unit recipient){
+        recipient.takeDamage(attackPower);
     }
 
-    public MapObject scanInRadius(int myRadius, Tile myTiles[][]) {
+    public MapObject scanInRadius(int myRadius) {
 
         for (int i = -myRadius; i <= myRadius; i++) {
             for (int j = -myRadius; j <= myRadius; j++) {
-                if (!(x + i < 0 || x + i > myTiles.length - 1 || y + j < 0 || y + j > myTiles[0].length - 1 || (i == 0 && j == 0))) {
-                    if (myTiles[x + i][y + j].myContents[myLayer] instanceof Hero || myTiles[x + i][y + j].myContents[myLayer] instanceof FriendlyCreature) {
-                        return myTiles[x + i][y + j].myContents[myLayer];
+                if (!(x + i < 0 || x + i > myEngine.myTiles.length - 1 || y + j < 0 || y + j > myEngine.myTiles[0].length - 1 || (i == 0 && j == 0))) {
+                    if (myEngine.myTiles[x + i][y + j].myContents[myLayer] instanceof Hero || myEngine.myTiles[x + i][y + j].myContents[myLayer] instanceof FriendlyCreature) {
+                        return myEngine.myTiles[x + i][y + j].myContents[myLayer];
                     }
                 }
             }
@@ -168,13 +168,13 @@ else
     }
 
     @Override
-    public void deathFunction(Tile myTiles[][]) throws IOException {
-        super.deathFunction(myTiles);
+    public void deathFunction(){
+        super.deathFunction();
         // if (myDrops != null) {
-        if (myTiles[x][y].myContents[2] == null) {
-            new LootBag(x, y, myTiles, myDrops, myBounty, thisScreen);
-        } else if (myTiles[x][y].myContents[2] instanceof LootBag) {
-            LootBag currentBag = (LootBag) myTiles[x][y].myContents[2];
+        if (myEngine.myTiles[x][y].myContents[2] == null) {
+            new LootBag(x, y, myDrops, myBounty, myEngine);
+        } else if (myEngine.myTiles[x][y].myContents[2] instanceof LootBag) {
+            LootBag currentBag = (LootBag) myEngine.myTiles[x][y].myContents[2];
             currentBag.addToBag(myDrops, myBounty);
         }
 

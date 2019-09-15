@@ -4,14 +4,14 @@ import java.io.IOException;
 
 public class Wall extends MapObject {
 
-    public Wall(int myX, int myY, Tile myTiles[][], int wallImageString, GameScreen myScreen) throws IOException {
-        thisScreen = myScreen;
+    public Wall(int myX, int myY, int wallImageString, GameEngine passedEngine) throws IOException {
+        myEngine = passedEngine;
         myLayer = 3;
         unitImage = wallImageString;
         image = generateImage(unitImage);
         x = myX;
         y = myY;
-        loadIntoTile(x, y, myTiles);
+        loadIntoTile(x, y);
     }
 
 }

@@ -6,11 +6,9 @@ import java.io.IOException;
 public class ShopKeeper extends MapObject implements Useable {
 
 //    boolean isOpen;
-GameEngine myEngine;
 
     public ShopKeeper(int myX, int myY, GameEngine passedEngine) throws IOException {
      //   isOpen = false;
-        thisScreen = passedEngine.thisScreen;
         myLayer = 3;
 myEngine = passedEngine;
 
@@ -18,10 +16,10 @@ myEngine = passedEngine;
         image = generateImage(unitImage);
         x = myX;
         y = myY;
-        loadIntoTile(x, y, myEngine.myTiles);
+        loadIntoTile(x, y);
     }
 
-    public int tryUse(GameEngine myEngine) {
+    public int tryUse() {
 return 3;
     }
 

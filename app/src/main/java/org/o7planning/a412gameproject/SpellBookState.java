@@ -37,6 +37,9 @@ public class SpellBookState extends GameState {
     public Spell raiseSkeletonSpell;
     public GameEngine myEngine;
     public int hoveredSpell;
+    int myHeight;
+    int myWidth;
+
 
     public SpellBookState(GameScreen myScreen, GameStateManager passedGSM, Hero theHero, GameEngine passedEngine) throws IOException {
         thisScreen = myScreen;
@@ -63,16 +66,16 @@ public class SpellBookState extends GameState {
         //  thisScreen.gbi.drawString(("This item is Level " + myTestItem.powerLevel), 50, 40);
         //}
 
-        int myHeight = canvas.getHeight();
-        int myWidth = canvas.getWidth() / 2;
+        myHeight = canvas.getHeight();
+        myWidth = canvas.getWidth() / 2;
         canvas.drawBitmap(menuImage, null, new Rect(0,0, myWidth * 2, myHeight * 1), null);
-        drawSpells(myWidth, myHeight, canvas);
+        drawSpells(canvas);
         //drawDescription(myWidth, myHeight);
     }
 
-    public void drawSpells(int myWidth, int myHeight, Canvas canvas) {
+    public void drawSpells(Canvas canvas) {
        canvas.drawBitmap(teleportSpell.spellImage, null, new Rect(100, 100, myWidth/3+100, myHeight/3+100), null);
-        canvas.drawBitmap(arcaneBlastSpell.spellImage, null, new Rect(1000, 100, myWidth/3+1000, myHeight/3+100), null);
+        canvas.drawBitmap(arcaneBlastSpell.spellImage, null, new Rect(myWidth, 100, myWidth * 4 /3, myHeight/3+100), null);
         canvas.drawBitmap(raiseSkeletonSpell.spellImage, null, new Rect(100,  myHeight / 2, myWidth/3+ 100, myHeight/3 + myHeight/2), null); //(100, 100) startpoint
     }
 
@@ -131,9 +134,9 @@ public class SpellBookState extends GameState {
 */
 
     public int calculateSpell(int x, int y) {
-        if (x > thisScreen.getWidth() / 2) {
+        if (x > myWidth) {
             return 2;
-        } else if (y > thisScreen.getHeight() / 2) {
+        } else if (y > myHeight / 2) {
             return 3;
         } else {
             return 1;

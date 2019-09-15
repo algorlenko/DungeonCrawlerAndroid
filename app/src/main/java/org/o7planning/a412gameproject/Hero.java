@@ -18,8 +18,8 @@ public class Hero extends Unit {
     int baseMaxHP; 
     int armor; //Hunter     
 
-    public Hero(int myX, int myY, Tile myTiles[][], int myImage, int myMaxHP, GameScreen myScreen) throws IOException {
-        super(myX, myY, myTiles, myImage, myMaxHP, myScreen);
+    public Hero(int myX, int myY, int myImage, int myMaxHP, GameEngine passedEngine){
+        super(myX, myY, myImage, myMaxHP, passedEngine);
         baseMaxHP = myMaxHP;
         goldCoins = 0;
         baseAttackPower = 20;
@@ -43,7 +43,14 @@ public class Hero extends Unit {
     
     
     
-    
+    public void heroMove(int dx, int dy) {
+        if((dx * dx) < 4 && (dy * dy ) < 4) {
+            move(dx, dy, myEngine.myTiles, myEngine.dungeonColumns, myEngine.dungeonRows, myEngine.myStatus);
+        }
+    }
+
+
+
     public boolean move(int dx, int dy, Tile myTiles[][], int dungeonColumns, int dungeonRows, StatusScreen myStatus) {
         int futureX = x + dx;
         int futureY = y + dy;
@@ -59,7 +66,7 @@ public class Hero extends Unit {
                 {
                     myTiles[futureX][futureY].myContents[myLayer].x = pastX;
                            myTiles[futureX][futureY].myContents[myLayer].y = pastY;
-                           myTiles[futureX][futureY].myContents[myLayer].loadIntoTile(pastX, pastY, myTiles);
+                           myTiles[futureX][futureY].myContents[myLayer].loadIntoTile(pastX, pastY);
                     // If the hero moves into a friendly monster he needs to be able to swap with him
                 }
                 else
@@ -67,7 +74,7 @@ public class Hero extends Unit {
                 myTiles[pastX][pastY].myContents[myLayer] = null;
                 myTiles[pastX][pastY].imageName[myLayer] = R.drawable.empty;
                 }
-                loadIntoTile(x, y, myTiles);
+                loadIntoTile(x, y);
 
                 //myStatus.message = "you have moved into coordinate" + x + " " + y + "and your current error is: ";
                 if (myTiles[futureX][futureY].myContents[2] instanceof LootBag) // this entire if statement could be converted into a more comprehensive pickUpItem function
@@ -102,23 +109,20 @@ public class Hero extends Unit {
     }
     
     @Override
-     public void takeDamage(int damageAmount, Tile myTiles[][]) throws IOException {
+     public void takeDamage(int damageAmount) {
         
             hp -= damageAmount;
         
-             
-            
-             
-            
+
         
         
         if (hp <= 0) {
-            deathFunction(myTiles);
+            deathFunction();
         }
     }
 
-    public void attack(Unit recipient, StatusScreen myStatus, Tile myTiles[][]) throws IOException {
-        recipient.takeDamage(attackPower, myTiles);
+    public void attack(Unit recipient, StatusScreen myStatus, Tile myTiles[][]){
+        recipient.takeDamage(attackPower);
     }
 
     public boolean pickUpItems(LootBag target) { // this is still kinda poorly written

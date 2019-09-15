@@ -24,11 +24,12 @@ public class Tile {
     Bitmap[] image;
     MapObject[] myContents;
     boolean hasChanged;
-GameScreen thisScreen;
+//GameScreen thisScreen; Old Approach
+GameEngine myEngine;
 
-    public Tile(int myX, int myY, int floorImageString, GameScreen myScreen) throws IOException {
-
-        thisScreen = myScreen;
+    public Tile(int myX, int myY, int floorImageString, GameEngine passedEngine) throws IOException {
+myEngine = passedEngine;
+        //thisScreen = myScreen; // old way of doing it
         imageName = new int[4];
         image = new Bitmap[4];
         myContents = new MapObject[4];
@@ -54,6 +55,7 @@ image[3] = null;
     }
 
     public Bitmap generateImage(int myImageName) throws IOException {
-        return thisScreen.generateImage(myImageName);
+        return myEngine.thisScreen.generateImage(myImageName);
+        // it used to be just thisScreen
     }
 }
