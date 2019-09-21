@@ -47,11 +47,11 @@ public class ShopState extends GameState { // completely fix this shop state asa
     int myWidth;
 
 
-    public ShopState(GameScreen myScreen, GameStateManager passedGSM, Hero theHero) throws IOException {
+    public ShopState(GameScreen myScreen, GameStateManager passedGSM) throws IOException {
         thisScreen = myScreen;
         myGSM = passedGSM;
         myEngine = (GameEngine) myGSM.gameStates.get(0); //this is probably crap and should desperately be reworked
-        myHero = theHero;
+        myHero = myGSM.myHero;
         heroInventory = myHero.myInventory;
         rows = (int) Math.sqrt(heroInventory.storageSpace);
         columns = rows;
@@ -68,39 +68,39 @@ public class ShopState extends GameState { // completely fix this shop state asa
 
 //I found a try catch here that needed to be removed, all the IOExceptions hinder my program
         //TODO remove almost all try catch statements
-    shopStock[0] = new Equipment(R.drawable.scythe3, 100, 0, 0, "Scythe of Power - Damage 100", "ScytheofPower", "Weapon", myEngine); //populating the shop through brute force
-    shopStock[1] = new Equipment(R.drawable.falchion1, 15, 0, 0, "Basic Falchion - Damage 15", "BasicFalchion", "Weapon", myEngine);
-    shopStock[2] = new Equipment(R.drawable.triple_sword, 25, 0, 0, "Triple Sword - Damage 25", "TripleSword", "Weapon", myEngine);
-    shopStock[3] = new Equipment(R.drawable.short_sword1, 15, 0, 0, "Short Sword - Damage 15", "ShortSword", "Weapon", myEngine);
-    shopStock[4] = new Equipment(R.drawable.scythe1, 20, 0, 0, "Scythe - Damage 20", "Scyth", "Weapon", myEngine);
-    shopStock[5] = new Equipment(R.drawable.spear1, 5, 0, 0, "Rusty Spear - Damage 5", "Spear", "Weapon", myEngine);
-    shopStock[6] = new Equipment(R.drawable.staff_mummy, 10, 0, 0, "Staff - Damage 10", "Staff", "Weapon", myEngine); //could boost magic once i see that implementation
-    shopStock[7] = new Equipment(R.drawable.hand_axe1, 5, 0, 0, "Hand Axe - Damage 15", "Hand Axe", "Weapon", myEngine);
-    shopStock[8] = new Equipment(R.drawable.long_sword1, 40, 0, 0, "Hero's Sword - Damage 40", "HeroSword", "Weapon", myEngine);
-    shopStock[9] = new Equipment(R.drawable.helmet1, 0, 5, 0, "Basic Helmet - Armor + 5", "BasicHelmet", "Helmet", myEngine);//Not sure how to classify
-    shopStock[10] = new Equipment(R.drawable.helmet_ego1, 0, 30, 0, "Helm of Vahalla - Armor + 30", "VallhalaHelm", "Helmet", myEngine);//Not sure how to classify
-    shopStock[11] = new Equipment(R.drawable.gold_dragon_armour, 0, 20, 0, "Dragon Aromour - +20 Armor", "Dragon Armor", "Armor", myEngine);//Not sure how to classify
-    shopStock[12] = new Equipment(R.drawable.cloak3, 0, 0, 25, "Wizard Robe - Intellegence + 25", "WizardRobe", "Armor", myEngine); //potential magic boost
-    shopStock[13] = new Equipment(R.drawable.boots2_jackboots, 0, 10, 0, "Boots - Armor +10", "Boots", "Boots", myEngine);
-    shopStock[14] = new Equipment(R.drawable.urand_shadows, 0, 10, 25, "Ring of Power, + 20 Intellegence + 10 Defense ", "RingOfPower", "Talisman", myEngine); //potential magic boost
-    shopStock[15] = new Equipment(R.drawable.urand_octoring, 0, 0, 15, "Magic Ring + 15 Intellengence", "MagicRing", "Talisman", myEngine); //potential magic boost
+        shopStock[0] = new Equipment(R.drawable.scythe3, 100, 0, 0, "Scythe of Power - Damage 100", "ScytheofPower", "Weapon", myEngine); //populating the shop through brute force
+        shopStock[1] = new Equipment(R.drawable.falchion1, 15, 0, 0, "Basic Falchion - Damage 15", "BasicFalchion", "Weapon", myEngine);
+        shopStock[2] = new Equipment(R.drawable.triple_sword, 25, 0, 0, "Triple Sword - Damage 25", "TripleSword", "Weapon", myEngine);
+        shopStock[3] = new Equipment(R.drawable.short_sword1, 15, 0, 0, "Short Sword - Damage 15", "ShortSword", "Weapon", myEngine);
+        shopStock[4] = new Equipment(R.drawable.scythe1, 20, 0, 0, "Scythe - Damage 20", "Scyth", "Weapon", myEngine);
+        shopStock[5] = new Equipment(R.drawable.spear1, 5, 0, 0, "Rusty Spear - Damage 5", "Spear", "Weapon", myEngine);
+        shopStock[6] = new Equipment(R.drawable.staff_mummy, 10, 0, 0, "Staff - Damage 10", "Staff", "Weapon", myEngine); //could boost magic once i see that implementation
+        shopStock[7] = new Equipment(R.drawable.hand_axe1, 5, 0, 0, "Hand Axe - Damage 15", "Hand Axe", "Weapon", myEngine);
+        shopStock[8] = new Equipment(R.drawable.long_sword1, 40, 0, 0, "Hero's Sword - Damage 40", "HeroSword", "Weapon", myEngine);
+        shopStock[9] = new Equipment(R.drawable.helmet1, 0, 5, 0, "Basic Helmet - Armor + 5", "BasicHelmet", "Helmet", myEngine);//Not sure how to classify
+        shopStock[10] = new Equipment(R.drawable.helmet_ego1, 0, 30, 0, "Helm of Vahalla - Armor + 30", "VallhalaHelm", "Helmet", myEngine);//Not sure how to classify
+        shopStock[11] = new Equipment(R.drawable.gold_dragon_armour, 0, 20, 0, "Dragon Aromour - +20 Armor", "Dragon Armor", "Armor", myEngine);//Not sure how to classify
+        shopStock[12] = new Equipment(R.drawable.cloak3, 0, 0, 25, "Wizard Robe - Intellegence + 25", "WizardRobe", "Armor", myEngine); //potential magic boost
+        shopStock[13] = new Equipment(R.drawable.boots2_jackboots, 0, 10, 0, "Boots - Armor +10", "Boots", "Boots", myEngine);
+        shopStock[14] = new Equipment(R.drawable.urand_shadows, 0, 10, 25, "Ring of Power, + 20 Intellegence + 10 Defense ", "RingOfPower", "Talisman", myEngine); //potential magic boost
+        shopStock[15] = new Equipment(R.drawable.urand_octoring, 0, 0, 15, "Magic Ring + 15 Intellengence", "MagicRing", "Talisman", myEngine); //potential magic boost
 
-    shopStock[0].goldValue = 1000; //setting values for the shop, hardcoding cuz thinking is hard
-    shopStock[1].goldValue = 200;
-    shopStock[2].goldValue = 300;
-    shopStock[3].goldValue = 200;
-    shopStock[4].goldValue = 250;
-    shopStock[5].goldValue = 100;
-    shopStock[6].goldValue = 100;
-    shopStock[7].goldValue = 100;
-    shopStock[8].goldValue = 500;
-    shopStock[9].goldValue = 100;
-    shopStock[10].goldValue = 400;
-    shopStock[11].goldValue = 300;
-    shopStock[12].goldValue = 300;
-    shopStock[13].goldValue = 200;
-    shopStock[14].goldValue = 700;
-    shopStock[15].goldValue = 500;
+        shopStock[0].goldValue = 1000; //setting values for the shop, hardcoding cuz thinking is hard
+        shopStock[1].goldValue = 200;
+        shopStock[2].goldValue = 300;
+        shopStock[3].goldValue = 200;
+        shopStock[4].goldValue = 250;
+        shopStock[5].goldValue = 100;
+        shopStock[6].goldValue = 100;
+        shopStock[7].goldValue = 100;
+        shopStock[8].goldValue = 500;
+        shopStock[9].goldValue = 100;
+        shopStock[10].goldValue = 400;
+        shopStock[11].goldValue = 300;
+        shopStock[12].goldValue = 300;
+        shopStock[13].goldValue = 200;
+        shopStock[14].goldValue = 700;
+        shopStock[15].goldValue = 500;
 
     }
 
@@ -115,7 +115,7 @@ public class ShopState extends GameState { // completely fix this shop state asa
         myWidth = canvas.getWidth() * 3 / 8;
 
         //int myWidth = thisScreen.myBufferedDimension.getWidth() * 3 / 8; the way that it used to be
-        myRectangle.set(0,0, canvas.getWidth(), myHeight);
+        myRectangle.set(0, 0, canvas.getWidth(), myHeight);
         canvas.drawBitmap(menuImage, null, myRectangle, null);
         drawInventory(canvas);
         drawEquipped(canvas);
@@ -128,8 +128,8 @@ public class ShopState extends GameState { // completely fix this shop state asa
 
         int left;
         int top;
-     int   itemWidth = (int) (myWidth * 0.8) / columns;
-       int itemHeight = (int) (myHeight * 0.8) / rows;
+        int itemWidth = (int) (myWidth * 0.8) / columns;
+        int itemHeight = (int) (myHeight * 0.8) / rows;
         int itemNumber = 0;
 
         for (int i = 0; i < columns; i++) {
@@ -143,7 +143,7 @@ public class ShopState extends GameState { // completely fix this shop state asa
 
                         myRectangle.set(left, top, left + itemWidth, top + itemHeight);
                         canvas.drawBitmap(heroInventory.items[itemNumber].image, null, myRectangle, null);
-                       // thisScreen.gbi.drawImage(heroInventory.items[itemNumber].image, ((myWidth / columns) * i) + 15, (myHeight / rows) * j + 20, (int) (myWidth * 0.8) / columns, (int) (myHeight * 0.8) / rows, null);
+                        // thisScreen.gbi.drawImage(heroInventory.items[itemNumber].image, ((myWidth / columns) * i) + 15, (myHeight / rows) * j + 20, (int) (myWidth * 0.8) / columns, (int) (myHeight * 0.8) / rows, null);
                     }
 
                 }
@@ -156,15 +156,15 @@ public class ShopState extends GameState { // completely fix this shop state asa
 
         int left = ((myWidth / columns) * 10) + 15;
         int top;
-    int    itemWidth = (int) (myWidth * 0.8) / columns;
-    int    itemHeight = (int) (myHeight * 0.8) / rows;
+        int itemWidth = (int) (myWidth * 0.8) / columns;
+        int itemHeight = (int) (myHeight * 0.8) / rows;
         for (int i = 0; i < myHero.SLOTS; i++) {
             if (myHero.equippedItems[i] != null) {
 
-top = (myHeight / rows) * i + 20;
+                top = (myHeight / rows) * i + 20;
                 myRectangle.set(left, top, left + itemWidth, top + itemHeight);
                 canvas.drawBitmap(myHero.equippedItems[i].image, null, myRectangle, null);
-              //  thisScreen.gbi.drawImage(myHero.equippedItems[i].image, ((myWidth / columns) * 10) + 15, ((myHeight / rows) * i) + 20, (int) (myWidth * 0.8) / columns, (int) (myHeight * 0.8) / rows, null);
+                //  thisScreen.gbi.drawImage(myHero.equippedItems[i].image, ((myWidth / columns) * 10) + 15, ((myHeight / rows) * i) + 20, (int) (myWidth * 0.8) / columns, (int) (myHeight * 0.8) / rows, null);
             }
         }
 
@@ -173,15 +173,15 @@ top = (myHeight / rows) * i + 20;
     public void drawShopStock(Canvas canvas) {
         int left;
         int top;
-        int    itemWidth = (int) (myWidth * 0.8) / columns;
-        int    itemHeight = (int) (myHeight * 0.8) / rows;
+        int itemWidth = (int) (myWidth * 0.8) / columns;
+        int itemHeight = (int) (myHeight * 0.8) / rows;
         for (int i = 0; i < STOCKSIZE; i++) {
             if (shopStock[i] != null) {
                 left = ((myWidth / columns) * (12 + (i % STOCKROWS))) + 15;
-                        top = ((myHeight / rows) * (2 + (i / STOCKROWS))) + 20;
+                top = ((myHeight / rows) * (2 + (i / STOCKROWS))) + 20;
                 myRectangle.set(left, top, left + itemWidth, top + itemHeight);
                 canvas.drawBitmap(shopStock[i].image, null, myRectangle, null);
-            //    thisScreen.gbi.drawImage(shopStock[i].image, ((myWidth / columns) * (12 + (i % STOCKROWS))) + 15, ((myHeight / rows) * (2 + (i / STOCKROWS))) + 20, (int) (myWidth * 0.8) / columns, (int) (myHeight * 0.8) / rows, null);
+                //    thisScreen.gbi.drawImage(shopStock[i].image, ((myWidth / columns) * (12 + (i % STOCKROWS))) + 15, ((myHeight / rows) * (2 + (i / STOCKROWS))) + 20, (int) (myWidth * 0.8) / columns, (int) (myHeight * 0.8) / rows, null);
             }
         }
 
@@ -192,26 +192,25 @@ top = (myHeight / rows) * i + 20;
             if (heroInventory.items[hoveredSlot] != null) {
                 int y = hoveredSlot / rows;
                 int x = hoveredSlot - (y * rows);
-               // thisScreen.gbi.drawString(heroInventory.items[hoveredSlot].itemDescription + " PRICE: " +heroInventory.items[hoveredSlot].goldValue, ((myWidth / columns) * x), (myHeight / rows) * y + 50); //we need to replace this 50 with something non hardcoded ASAP
+                // thisScreen.gbi.drawString(heroInventory.items[hoveredSlot].itemDescription + " PRICE: " +heroInventory.items[hoveredSlot].goldValue, ((myWidth / columns) * x), (myHeight / rows) * y + 50); //we need to replace this 50 with something non hardcoded ASAP
             }
         } else if (hoveredSlot >= heroInventory.storageSpace && hoveredSlot < (heroInventory.storageSpace + 6)) {
             int hoveredEquipSlot = hoveredSlot - heroInventory.storageSpace;
             if (myHero.equippedItems[hoveredEquipSlot] != null) {
                 int y = hoveredEquipSlot;
                 int x = 9;
-              //  thisScreen.gbi.drawString(myHero.equippedItems[hoveredEquipSlot].itemDescription + " PRICE: " + myHero.equippedItems[hoveredEquipSlot].goldValue , ((myWidth / columns) * x), (myHeight / rows) * y + 50); //we need to replace this 50 with something non hardcoded ASAP
+                //  thisScreen.gbi.drawString(myHero.equippedItems[hoveredEquipSlot].itemDescription + " PRICE: " + myHero.equippedItems[hoveredEquipSlot].goldValue , ((myWidth / columns) * x), (myHeight / rows) * y + 50); //we need to replace this 50 with something non hardcoded ASAP
             }
-        }
-        else if(hoveredSlot >= SHOPOFFSET){
+        } else if (hoveredSlot >= SHOPOFFSET) {
             int y = 3;
             int x = 7;
             if (shopStock[hoveredSlot - SHOPOFFSET] != null) {
                 //   thisScreen.gbi.drawString(shopStock[hoveredSlot - SHOPOFFSET].itemDescription + " PRICE: " + shopStock[hoveredSlot - SHOPOFFSET].goldValue, ((myWidth / columns) * x), (myHeight / rows) * y + 50); //we need to replace this 50 with something non hardcoded ASAP
             }
         }
-            
-       // thisScreen.gbi.drawString("Current Attack Power: " + myHero.attackPower, 750, 50);
-      //  thisScreen.gbi.drawString("Current Gold is: " + (int) myHero.goldCoins, 750, 100);
+
+        // thisScreen.gbi.drawString("Current Attack Power: " + myHero.attackPower, 750, 50);
+        //  thisScreen.gbi.drawString("Current Gold is: " + (int) myHero.goldCoins, 750, 100);
     }
 
    /* public void keyPressed(KeyEvent e) {
@@ -233,7 +232,7 @@ top = (myHeight / rows) * i + 20;
 
     public void lightlyResetInventory() {
         selectedSlot = -1;
-       // thisScreen.resetCursor();
+        // thisScreen.resetCursor();
     }
 
 
@@ -254,7 +253,7 @@ top = (myHeight / rows) * i + 20;
         } else if (x * columns / myWidth >= columns && y * rows / myHeight < rows && x < 2 * myWidth) {
             return heroInventory.storageSpace + (y * rows / myHeight);
         } else if (x >= 2 * myWidth && y * rows / myHeight >= 2) {
-           // System.out.println(SHOPOFFSET + (x * columns / myWidth) - 12 + (((y * rows / myHeight) - 2) * STOCKROWS));
+            // System.out.println(SHOPOFFSET + (x * columns / myWidth) - 12 + (((y * rows / myHeight) - 2) * STOCKROWS));
             return SHOPOFFSET + (x * columns / myWidth) - 12 + (((y * rows / myHeight) - 2) * STOCKROWS);
 
         } else if (x >= 2 * myWidth && y * rows / myHeight < 2) {
@@ -266,12 +265,10 @@ top = (myHeight / rows) * i + 20;
     }
 
     public void mouseClicked(MotionEvent e) {
-        if(e.getY() > (myHeight * 4)  / 5)
-        {
+        if (e.getY() > (myHeight * 4) / 5) {
             lightlyResetInventory();
             myGSM.setState(0);
-        }
-        else {
+        } else {
             hoveredSlot = calculateSlot((int) e.getX(), (int) e.getY());
 
             if (hoveredSlot > -1) {

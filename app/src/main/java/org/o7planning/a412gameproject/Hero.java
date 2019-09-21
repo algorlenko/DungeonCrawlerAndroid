@@ -15,10 +15,10 @@ public class Hero extends Unit {
     int baseIntelligence; // added by Alex
     int intelligence;
     int maxArmor;
-    int baseMaxHP; 
+    int baseMaxHP;
     int armor; //Hunter     
 
-    public Hero(int myX, int myY, int myImage, int myMaxHP, GameEngine passedEngine){
+    public Hero(int myX, int myY, int myImage, int myMaxHP, GameEngine passedEngine) {
         super(myX, myY, myImage, myMaxHP, passedEngine);
         baseMaxHP = myMaxHP;
         goldCoins = 0;
@@ -28,11 +28,11 @@ public class Hero extends Unit {
         intelligence = baseIntelligence;
         inventorySpace = 36;
         myInventory = new Inventory(36);
-        
-        maxMana = 100; 
-        baseMaxMana = maxMana; 
-        mana = maxMana; 
-        
+
+        maxMana = 100;
+        baseMaxMana = maxMana;
+        mana = maxMana;
+
         equippedItems = new Equipment[SLOTS];
         for (int i = 0; i < SLOTS; i++) {
             equippedItems[i] = null;
@@ -40,15 +40,12 @@ public class Hero extends Unit {
         }
     }
 
-    
-    
-    
+
     public void heroMove(int dx, int dy) {
-        if((dx * dx) < 4 && (dy * dy ) < 4) {
+        if ((dx * dx) < 4 && (dy * dy) < 4) {
             move(dx, dy, myEngine.myTiles, myEngine.dungeonColumns, myEngine.dungeonRows, myEngine.myStatus);
         }
     }
-
 
 
     public boolean move(int dx, int dy, Tile myTiles[][], int dungeonColumns, int dungeonRows, StatusScreen myStatus) {
@@ -62,17 +59,14 @@ public class Hero extends Unit {
             if (myTiles[futureX][futureY].myContents[myLayer] == null || myTiles[futureX][futureY].myContents[myLayer] instanceof FriendlyCreature) { // Gorlenko modified this
                 x = futureX;
                 y = futureY;
-                if(myTiles[futureX][futureY].myContents[myLayer] instanceof FriendlyCreature)
-                {
+                if (myTiles[futureX][futureY].myContents[myLayer] instanceof FriendlyCreature) {
                     myTiles[futureX][futureY].myContents[myLayer].x = pastX;
-                           myTiles[futureX][futureY].myContents[myLayer].y = pastY;
-                           myTiles[futureX][futureY].myContents[myLayer].loadIntoTile(pastX, pastY);
+                    myTiles[futureX][futureY].myContents[myLayer].y = pastY;
+                    myTiles[futureX][futureY].myContents[myLayer].loadIntoTile(pastX, pastY);
                     // If the hero moves into a friendly monster he needs to be able to swap with him
-                }
-                else
-                {
-                myTiles[pastX][pastY].myContents[myLayer] = null;
-                myTiles[pastX][pastY].imageName[myLayer] = R.drawable.empty;
+                } else {
+                    myTiles[pastX][pastY].myContents[myLayer] = null;
+                    myTiles[pastX][pastY].imageName[myLayer] = R.drawable.empty;
                 }
                 loadIntoTile(x, y);
 
@@ -107,21 +101,19 @@ public class Hero extends Unit {
         myStatus.pushMessage("You cannnot move there");
         return false;
     }
-    
-    @Override
-     public void takeDamage(int damageAmount) {
-        
-            hp -= damageAmount;
-        
 
-        
-        
+    @Override
+    public void takeDamage(int damageAmount) {
+
+        hp -= damageAmount;
+
+
         if (hp <= 0) {
             deathFunction();
         }
     }
 
-    public void attack(Unit recipient, StatusScreen myStatus, Tile myTiles[][]){
+    public void attack(Unit recipient, StatusScreen myStatus, Tile myTiles[][]) {
         recipient.takeDamage(attackPower);
     }
 
@@ -159,30 +151,29 @@ public class Hero extends Unit {
     public void calculateStats() {
         attackPower = baseAttackPower;
         intelligence = baseIntelligence;
-        int oldMaxHP = maxHP; 
+        int oldMaxHP = maxHP;
         maxHP = baseMaxHP;
         for (int i = 0; i < SLOTS; i++) {
             if (equippedItems[i] != null) {
                 attackPower += equippedItems[i].powerLevel;
                 intelligence += equippedItems[i].intelligenceLevel;
                 maxHP += equippedItems[i].armourLevel;
-                
+
             }
         }
-       hp = ((hp * maxHP) / (oldMaxHP)) +1;
-       if(hp > maxHP)
-       {
-           hp = maxHP;
-       }
+        hp = ((hp * maxHP) / (oldMaxHP)) + 1;
+        if (hp > maxHP) {
+            hp = maxHP;
+        }
         // this will be a function that will make strength autmoaticallt update HP and damage, and will make equipping Items apply their relevant stat boosts
     }
 
-    
-    public void recover(){
-        hp = maxHP; 
-        mana = maxMana; 
-    
-    
+
+    public void recover() {
+        hp = maxHP;
+        mana = maxMana;
+
+
     }
-    
+
 }

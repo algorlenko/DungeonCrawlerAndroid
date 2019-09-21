@@ -135,7 +135,7 @@ myGraphic = new Canvas(); // this is a test
             this.myStatus.pushMessage("person guarding the only way out of here.");
         }
 
-        public void makeNewLevel() throws IOException {
+        public void makeNewLevel() {
 
             try{
                 // restore this asap HIGH PRIORITY
@@ -233,30 +233,21 @@ myGraphic = new Canvas(); // this is a test
                     if (useResult == 3) // if the object you used was a shopkeeper
                     {
                         successfulTurn();
-                        try {
-                            monsterTurn(); // Monsters will still get their turn to avoid glitches, I may change this later.
-                        } catch (Exception exc) {
-                            exc.printStackTrace();
 
-                        }
+                            monsterTurn(); // Monsters will still get their turn to avoid glitches, I may change this later.
+
                         myGSM.setState(5); // set State to Shop State
                     }
                     if (useResult == 1) {
                         successfulTurn();
-                        try {
-                            monsterTurn();
-                        } catch (Exception exc) {
-                            exc.printStackTrace();
 
-                        }
+                            monsterTurn();
+
 
                     } else if (useResult == 2) {
-                        try {
-                            makeNewLevel();
-                        } catch (Exception exc) {
-                            exc.printStackTrace();
+                        System.gc();
+                        makeNewLevel();
 
-                        }
                     }
                 } else {
                     myStatus.pushMessage("Your Target is out of Range.");
@@ -268,17 +259,11 @@ myGraphic = new Canvas(); // this is a test
         public void attemptAttack(Point selectedTile) {
             if (myTiles[selectedTile.x][selectedTile.y].myContents[UNITLAYER] instanceof Monster) {
                 if (selectedTile.x <= myHero.x + 1 && selectedTile.x >= myHero.x - 1 && selectedTile.y <= myHero.y + 1 && selectedTile.y >= myHero.y - 1) {
-                    try // I fucking hate Java for this, I need to get rid of this garbage, but I can't currently, it is all because I need to generate a Treasure Chest Image in the Monster Class for the LootBag
-                    {
                         myHero.attack((Unit) myTiles[selectedTile.x][selectedTile.y].myContents[UNITLAYER], myStatus, myTiles);
                         successfulTurn();
                         if (turnHolder instanceof Monster) {
                             monsterTurn();
                         }
-                    } catch (Exception exc) {
-                        exc.printStackTrace();
-
-                    }
                 } else {
                     myStatus.pushMessage("Your Target is out of Range.");
                 }
@@ -349,14 +334,9 @@ myGraphic = new Canvas(); // this is a test
 
                 turnHolder = friendlyCreatures.get(i);
                 selectedAlly = (FriendlyCreature) turnHolder; //this may need improvments
-                try
-                {
-                selectedAlly.aiAction();
-                }
-                catch(Exception exc)
-                {
 
-                }
+                selectedAlly.aiAction();
+
                 if (friendlyCreatures.get(i).isAlive == false) {
                     friendlyCreatures.remove(i);
                     if (i != friendlyCreatures.size()) {

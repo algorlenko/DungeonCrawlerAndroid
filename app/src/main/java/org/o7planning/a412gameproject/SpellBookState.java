@@ -37,15 +37,16 @@ public class SpellBookState extends GameState {
     public Spell raiseSkeletonSpell;
     public GameEngine myEngine;
     public int hoveredSpell;
+    public Rect myRectangle;
     int myHeight;
     int myWidth;
 
 
-    public SpellBookState(GameScreen myScreen, GameStateManager passedGSM, Hero theHero, GameEngine passedEngine) throws IOException {
+    public SpellBookState(GameScreen myScreen, GameStateManager passedGSM, GameEngine passedEngine) throws IOException {
         thisScreen = myScreen;
         myGSM = passedGSM;
         hoveredSpell = 0;
-        myHero = theHero;
+        myHero = myGSM.myHero;
         heroInventory = myHero.myInventory;
         rows = (int) Math.sqrt(heroInventory.storageSpace);
         columns = rows;
@@ -54,6 +55,7 @@ public class SpellBookState extends GameState {
         //menuImage = generateImage(R.drawable.staff_mummy);
         selectedSlot = -1;
         myEngine = passedEngine;
+        myRectangle = new Rect(); //TODO could probably have one recyclable rectangle for all in GSM
         teleportSpell = new Spell(myEngine, "Teleport", R.drawable.controlled_blink, 30);
         arcaneBlastSpell = new Spell(myEngine, "Arcane Blast", R.drawable.force_lance, 20);
         raiseSkeletonSpell = new Spell(myEngine, "Raise Skeleton", R.drawable.animate_dead, 50);
@@ -68,15 +70,19 @@ public class SpellBookState extends GameState {
 
         myHeight = canvas.getHeight();
         myWidth = canvas.getWidth() / 2;
-        canvas.drawBitmap(menuImage, null, new Rect(0,0, myWidth * 2, myHeight * 1), null);
+        myRectangle.set(0,0, myWidth * 2, myHeight * 1);
+        canvas.drawBitmap(menuImage, null, myRectangle, null);
         drawSpells(canvas);
         //drawDescription(myWidth, myHeight);
     }
 
     public void drawSpells(Canvas canvas) {
-       canvas.drawBitmap(teleportSpell.spellImage, null, new Rect(100, 100, myWidth/3+100, myHeight/3+100), null);
-        canvas.drawBitmap(arcaneBlastSpell.spellImage, null, new Rect(myWidth, 100, myWidth * 4 /3, myHeight/3+100), null);
-        canvas.drawBitmap(raiseSkeletonSpell.spellImage, null, new Rect(100,  myHeight / 2, myWidth/3+ 100, myHeight/3 + myHeight/2), null); //(100, 100) startpoint
+        myRectangle.set(100, 100, myWidth/3+100, myHeight/3+100);
+       canvas.drawBitmap(teleportSpell.spellImage, null, myRectangle, null);
+        myRectangle.set(myWidth, 100, myWidth * 4 /3, myHeight/3+100);
+        canvas.drawBitmap(arcaneBlastSpell.spellImage, null, myRectangle, null);
+        myRectangle.set(100,  myHeight / 2, myWidth/3+ 100, myHeight/3 + myHeight/2);
+        canvas.drawBitmap(raiseSkeletonSpell.spellImage, null, myRectangle, null); //(100, 100) startpoint
     }
 
     public void drawDescription(int myWidth, int myHeight) {

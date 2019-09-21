@@ -36,11 +36,11 @@ public class InventoryState extends GameState {
     public int myHeight;
 public int myWidth;
 
-    public InventoryState(GameScreen myScreen, GameStateManager passedGSM, Hero theHero) throws IOException {
+    public InventoryState(GameScreen myScreen, GameStateManager passedGSM) throws IOException {
         myRectangle = new Rect();
         thisScreen = myScreen;
         myGSM = passedGSM;
-        myHero = theHero;
+        myHero = myGSM.myHero;
         heroInventory = myHero.myInventory;
         rows = (int) Math.sqrt(heroInventory.storageSpace);
         columns = rows;

@@ -37,7 +37,7 @@ public class Monster extends Unit {
         attackPower = 2;
 
     }
-    
+
     public Monster(int myX, int myY, int myImage, InventoryItem myLoot, int myMaxHP, long itsBounty, int myAttack, GameEngine passedEngine) throws IOException { // this will be the more in-depth constructor
         super(myX, myY, myImage, myMaxHP, passedEngine);
         myBounty = itsBounty;
@@ -70,7 +70,7 @@ public class Monster extends Unit {
         }
     }
 
-    
+
     //oldAIcode
    /*  public void aiAction(Tile myTiles[][], StatusScreen myStatus) throws IOException {
         MapObject target = null;
@@ -107,8 +107,8 @@ public class Monster extends Unit {
         }
     }
 */
-    
-     public void aiAction() {
+
+    public void aiAction() {
         MapObject target = null;
         target = scanInRadius(1); // first we try to see if there is a hero or friendly within attacking range
         // Random rand = new Random();
@@ -121,35 +121,33 @@ public class Monster extends Unit {
         } else {
             target = scanInRadius(4); // if not, we check to see if they are within aggro distance and if we are, we follow them.
             if (target != null) {
-followTarget(target);
+                followTarget(target);
             }
- 
+
         }
         // move(xMove, yMove, myTiles, myTiles.length, myTiles[0].length);
 
     }
-    
-        public void followTarget(MapObject target) // I could potentially add in diagonal movement and just generally more intelligent calculation this in particualr also uses sloppier code than the allied creature, the allied Creature class is the gold standard for future work.
+
+    public void followTarget(MapObject target) // I could potentially add in diagonal movement and just generally more intelligent calculation this in particualr also uses sloppier code than the allied creature, the allied Creature class is the gold standard for future work.
     {
-                int xMove = 0;
+        int xMove = 0;
         int yMove = 0;
         xMove = target.x - x;
-yMove = target.y - y; 
-if(Math.abs(xMove) > Math.abs(yMove))
-{
-    xMove = (int) Math.signum(xMove);;
-    yMove = 0;
-}
-else
-{
-    yMove = (int) Math.signum(yMove);
-    xMove = 0;
-}
-            move(xMove, yMove);
+        yMove = target.y - y;
+        if (Math.abs(xMove) > Math.abs(yMove)) {
+            xMove = (int) Math.signum(xMove);
+            ;
+            yMove = 0;
+        } else {
+            yMove = (int) Math.signum(yMove);
+            xMove = 0;
+        }
+        move(xMove, yMove);
     }
-    
-    
-    public void attack(Unit recipient){
+
+
+    public void attack(Unit recipient) {
         recipient.takeDamage(attackPower);
     }
 
@@ -168,7 +166,7 @@ else
     }
 
     @Override
-    public void deathFunction(){
+    public void deathFunction() {
         super.deathFunction();
         // if (myDrops != null) {
         if (myEngine.myTiles[x][y].myContents[2] == null) {

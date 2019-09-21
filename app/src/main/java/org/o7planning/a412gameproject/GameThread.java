@@ -29,8 +29,8 @@ public class GameThread extends Thread {
                 synchronized (canvas)  {
      //               this.gameScreen.myGSM.draw(Canvas canvas);
 
-                    this.gameScreen.draw(canvas);
-                    gameScreen.myGSM.draw(canvas);
+                    this.gameScreen.draw(canvas); // Clears the Canvas basically
+                    gameScreen.myGSM.draw(canvas);// Draws to the Canvas
                 }
             }catch(Exception e)  {
                 // Do nothing.
@@ -44,7 +44,7 @@ public class GameThread extends Thread {
             // Interval to redraw game
             // (Change nanoseconds to milliseconds)
             long waitTime = (now - startTime)/1000000;
-            if(waitTime < 50)  {
+            if(waitTime < 50) {
                 waitTime= 50; // Millisecond.
             }
 //            System.out.print(" Wait Time="+ waitTime);

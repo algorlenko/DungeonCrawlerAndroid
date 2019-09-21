@@ -11,6 +11,7 @@ public class GameStateManager {
     public GameScreen myScreen;
     private int currentState;
     public Hero myHero;
+    GameEngine myGameEngine;
     //public Design.Hero hero;
     public static final int MAINMENUSTATE = 2;
     public static final int ADVENTURESTATE = 0; // these numbers will be flipped later
@@ -28,15 +29,15 @@ public class GameStateManager {
         myScreen = passedScreen;
         // currentState = ADVENTURESTATE;
         //currentState = ADVENTURESTATE;
-        GameEngine myGameEngine = new GameEngine(myScreen, this); // Alex added this
+        myGameEngine = new GameEngine(myScreen, this); // Alex added this
         gameStates.add(myGameEngine); // Alex added this
         myHero = gameStates.get(0).myHero;
-        gameStates.add(new InventoryState(myScreen, this, myHero));
+        gameStates.add(new InventoryState(myScreen, this));
         gameStates.add(new MainMenuState(myScreen, this));
         gameStates.add(new PauseMenuState(myScreen, this));
         gameStates.add(new DeathState(myScreen, this));
-        gameStates.add(new ShopState(myScreen, this, myHero));
-        gameStates.add(new SpellBookState(myScreen, this, myHero, myGameEngine)); //Alex added this
+        gameStates.add(new ShopState(myScreen, this));
+        gameStates.add(new SpellBookState(myScreen, this, myGameEngine)); //Alex added this
         setState(ADVENTURESTATE);
         //gameStates.add(new AdventureState(this));
         //gameStates.add(new InventoryState(this));
@@ -49,10 +50,10 @@ public class GameStateManager {
         try {
             gameStates.set(ADVENTURESTATE, new GameEngine(myScreen, this));
             myHero = gameStates.get(ADVENTURESTATE).myHero;
-            gameStates.set(INVENTORYSTATE, new InventoryState(myScreen, this, myHero));
-            gameStates.set(SHOPSTATE, new ShopState(myScreen, this, myHero));
+            gameStates.set(INVENTORYSTATE, new InventoryState(myScreen, this));
+            gameStates.set(SHOPSTATE, new ShopState(myScreen, this));
             GameEngine myGameEngine = (GameEngine) gameStates.get(ADVENTURESTATE);
-            gameStates.set(SPELLBOOKSTATE, new SpellBookState(myScreen, this, myHero, myGameEngine)); 
+            gameStates.set(SPELLBOOKSTATE, new SpellBookState(myScreen, this, myGameEngine));
             
             setState(0);
         } catch (Exception exc) {
