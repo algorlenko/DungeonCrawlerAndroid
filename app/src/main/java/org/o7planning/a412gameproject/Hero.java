@@ -40,6 +40,28 @@ public class Hero extends Unit {
         }
     }
 
+    public Hero(Tile heroTile, int myMaxHP) {
+        super(heroTile, myMaxHP, "Hero",4);
+        baseMaxHP = myMaxHP;
+        goldCoins = 0;
+        baseAttackPower = 20;
+        attackPower = baseAttackPower;
+        baseIntelligence = 50; // added by Alex
+        intelligence = baseIntelligence;
+        inventorySpace = 36;
+        myInventory = new Inventory(36);
+
+        maxMana = 100;
+        baseMaxMana = maxMana;
+        mana = maxMana;
+
+        equippedItems = new Equipment[SLOTS];
+        for (int i = 0; i < SLOTS; i++) {
+            equippedItems[i] = null;
+
+        }
+    }
+
 
     public void heroMove(int dx, int dy) {
         if ((dx * dx) < 4 && (dy * dy) < 4) {
@@ -47,6 +69,37 @@ public class Hero extends Unit {
         }
     }
 
+    public void heroMove(Tile newTile, StatusScreen myStatus) {
+        moveToTile(newTile);
+        if (newTile.myContents[2] instanceof LootBag) // this entire if statement could be converted into a more comprehensive pickUpItem function
+        {
+            long howMuchGold;
+            String tempMessage;
+            LootBag myGrabbedLoot;
+            myGrabbedLoot = ((LootBag) newTile.myContents[2]);
+            howMuchGold = myGrabbedLoot.goldCoins;
+            if (myGrabbedLoot.droppedItems == null) {
+                tempMessage = "You have picked up " + howMuchGold + " gold coins.";
+            } else if (myGrabbedLoot.droppedItems.size() == 1) {
+                tempMessage = "You have picked up an item, and " + howMuchGold + " gold coins.";
+            } else {
+                tempMessage = "You have picked up some items, and " + howMuchGold + " gold coins.";
+            }
+            if (pickUpItems(myGrabbedLoot)) {
+                newTile.myContents[2]=null;
+            } else {
+                tempMessage = "Your Inventory is Full, but you grabbed the " + howMuchGold + " gold coins.";
+            }
+            myStatus.pushMessage(tempMessage);
+        }
+    }
+
+    public void swap(MapObject objectToSwap) {
+        Tile newTile = objectToSwap.currentTile;
+        Tile oldTile = this.currentTile;
+        this.moveToTile(newTile);
+        objectToSwap.moveToTile(oldTile);
+    }
 
     public boolean move(int dx, int dy, Tile myTiles[][], int dungeonColumns, int dungeonRows, StatusScreen myStatus) {
         int futureX = x + dx;

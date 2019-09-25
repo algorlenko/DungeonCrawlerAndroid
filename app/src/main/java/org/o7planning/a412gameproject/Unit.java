@@ -29,6 +29,15 @@ public class Unit extends MapObject {
 
     }
 
+    public Unit(Tile currentTile, int myMaxHP, String baseImageName, int numberOfImages){
+        super(currentTile, 3, numberOfImages, baseImageName);
+        myEngine = currentTile.myEngine;
+        myLayer = 3;
+        maxHP = myMaxHP;
+        hp = maxHP;
+        isAlive = true;
+    }
+
     public void takeDamage(int damageAmount) {
         
         hp -= damageAmount;

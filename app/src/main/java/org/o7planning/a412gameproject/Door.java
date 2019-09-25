@@ -29,6 +29,19 @@ public class Door extends MapObject implements Useable {
         loadIntoTile(x, y);
     }
 
+    public Door(Tile currentTile) {
+        super(currentTile, 3, 2, "Door");
+        isOpen = false;
+        x = currentTile.x;
+        y = currentTile.y;
+    }
+
+    @Override
+
+    public Bitmap getCurrentImage(){
+        return images[currentImageNumber];
+    }
+
     public int tryUse() {
         if (isOpen == false) {
             return tryOpen();
@@ -41,10 +54,8 @@ public class Door extends MapObject implements Useable {
         if (isOpen == false) {
             if (myEngine.myHero.myInventory.searchFor("L1Key") != -1) {
                 isOpen = true;
-                unitImage = openImageString;
-                image = openImage;
-                loadIntoTile(x, y);
                 int removedItem;
+                currentImageNumber = 1;
                 removedItem = myEngine.myHero.myInventory.searchFor("L1Key");
                 myEngine.myHero.myInventory.clearSlot(removedItem);
                 myEngine.myStatus.pushMessage("You have unlocked the door using your key.");

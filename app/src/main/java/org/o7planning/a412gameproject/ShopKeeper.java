@@ -19,6 +19,12 @@ myEngine = passedEngine;
         loadIntoTile(x, y);
     }
 
+    public ShopKeeper(Tile currentTile) {
+        super(currentTile, 3, 1, "Shopkeeper");
+        x = currentTile.x;
+        y = currentTile.y;
+    }
+
     public int tryUse() {
 return 3;
     }

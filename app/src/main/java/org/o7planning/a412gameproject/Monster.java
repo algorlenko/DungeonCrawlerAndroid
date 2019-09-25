@@ -52,6 +52,19 @@ public class Monster extends Unit {
 
     }
 
+    public Monster(Tile heroTile, String monsterName, InventoryItem myLoot, int myMaxHP) {
+        super(heroTile, myMaxHP, monsterName,4);
+        myBounty = 100;
+        maxHP = myMaxHP;
+        myDrops = new ArrayList<InventoryItem>();
+        if (myLoot != null) {
+            myDrops.add(myLoot);
+        } else {
+            myDrops = null;
+        }
+        attackPower = 2;
+
+    }
     public void move(int dx, int dy) {
         int futureX = x + dx;
         int futureY = y + dy;
@@ -69,44 +82,6 @@ public class Monster extends Unit {
             }
         }
     }
-
-
-    //oldAIcode
-   /*  public void aiAction(Tile myTiles[][], StatusScreen myStatus) throws IOException {
-        MapObject target = null;
-        target = scanInRadius(1, myTiles);
-        Random rand = new Random();
-        int xMove = 0;
-        int yMove = 0;
-        if (target != null) {
-            Unit unitTarget = (Unit) target;
-            attack(unitTarget, myTiles);
-            myStatus.pushMessage("The Hero has been attacked!");
-        } else {
-            int n = rand.nextInt(4);
-            switch (n) {
-                case 0:
-                    xMove = -1;
-                    yMove = 0;
-                    break;
-                case 1:
-                    xMove = 0;
-                    yMove = 1;
-                    break;
-                case 2:
-                    xMove = 1;
-                    yMove = 0;
-                    break;
-                case 3:
-                    xMove = 0;
-                    yMove = -1;
-                    break;
-
-            }
-            move(xMove, yMove, myTiles, myTiles.length, myTiles[0].length);
-        }
-    }
-*/
 
     public void aiAction() {
         MapObject target = null;
@@ -126,7 +101,6 @@ public class Monster extends Unit {
 
         }
         // move(xMove, yMove, myTiles, myTiles.length, myTiles[0].length);
-
     }
 
     public void followTarget(MapObject target) // I could potentially add in diagonal movement and just generally more intelligent calculation this in particualr also uses sloppier code than the allied creature, the allied Creature class is the gold standard for future work.
@@ -170,7 +144,8 @@ public class Monster extends Unit {
         super.deathFunction();
         // if (myDrops != null) {
         if (myEngine.myTiles[x][y].myContents[2] == null) {
-            new LootBag(x, y, myDrops, myBounty, myEngine);
+            //new LootBag(x, y, myDrops, myBounty, myEngine);
+            new LootBag(myEngine.myTiles[x][y], myDrops, myBounty);
         } else if (myEngine.myTiles[x][y].myContents[2] instanceof LootBag) {
             LootBag currentBag = (LootBag) myEngine.myTiles[x][y].myContents[2];
             currentBag.addToBag(myDrops, myBounty);

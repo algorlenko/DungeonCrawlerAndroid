@@ -24,6 +24,17 @@ public class LootBag extends MapObject {
         loadIntoTile(x, y);
     }
 
+    public LootBag(Tile lootTile, ArrayList<InventoryItem> myItems, long myBounty){
+        super(lootTile, 2);
+        droppedItems = myItems;
+        if (myItems == null) {
+            this.images[0]=myEngine.myGSM.allImages.get("Satchel");
+        } else {
+            this.images[0]=myEngine.myGSM.allImages.get("SilverChest");
+        }
+        goldCoins = myBounty;
+    }
+
     public void addToBag(ArrayList<InventoryItem> addedItems, long addedBounty) //this is poorly written and should be done using lists
     {
         goldCoins += addedBounty;

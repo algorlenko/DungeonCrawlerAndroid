@@ -2,9 +2,12 @@ package org.o7planning.a412gameproject;
 
 import java.util.ArrayList;
 import java.io.IOException;
-
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
+import java.util.*;
+
 public class GameStateManager {
 
     public ArrayList<GameState> gameStates;
@@ -12,6 +15,7 @@ public class GameStateManager {
     private int currentState;
     public Hero myHero;
     GameEngine myGameEngine;
+    Map<String, Bitmap> allImages;
     //public Design.Hero hero;
     public static final int MAINMENUSTATE = 2;
     public static final int ADVENTURESTATE = 0; // these numbers will be flipped later
@@ -27,6 +31,9 @@ public class GameStateManager {
         // hero = new Design.Hero(R.drawable.player/base/demonspawn_black_m);
         gameStates = new ArrayList<GameState>();
         myScreen = passedScreen;
+        allImages = new HashMap<String, Bitmap>();
+        loadImages();
+
         // currentState = ADVENTURESTATE;
         //currentState = ADVENTURESTATE;
         myGameEngine = new GameEngine(myScreen, this); // Alex added this
@@ -73,6 +80,27 @@ public class GameStateManager {
     public void update() {
 
         //  gameStates.get(currentState).update();
+    }
+
+    public void loadImages(){
+        allImages.put("Hero0", myScreen.generateImage(R.drawable.dknight_1));
+        allImages.put("Hero1", myScreen.generateImage(R.drawable.dknight_2));
+        allImages.put("Hero2", myScreen.generateImage(R.drawable.dknight_3));
+        allImages.put("Hero3", myScreen.generateImage(R.drawable.dknight_4));
+        allImages.put("Door0", myScreen.generateImage(R.drawable.runed_door));
+        allImages.put("Door1", myScreen.generateImage(R.drawable.open_door));
+        allImages.put("Shopkeeper0", myScreen.generateImage(R.drawable.merchant_a_shopkeeper));
+        allImages.put("Wall0", myScreen.generateImage(R.drawable.wall_hedge_7));
+        allImages.put("Cultist0", myScreen.generateImage(R.drawable.cultist_1));
+        allImages.put("Cultist1", myScreen.generateImage(R.drawable.cultist_2));
+        allImages.put("Cultist2", myScreen.generateImage(R.drawable.cultist_3));
+        allImages.put("Cultist3", myScreen.generateImage(R.drawable.cultist_4));
+        allImages.put("BeetleFireGiant0", myScreen.generateImage(R.drawable.beetle_fire_giant_1));
+        allImages.put("BeetleFireGiant1", myScreen.generateImage(R.drawable.beetle_fire_giant_2));
+        allImages.put("BeetleFireGiant2", myScreen.generateImage(R.drawable.beetle_fire_giant_3));
+        allImages.put("BeetleFireGiant3", myScreen.generateImage(R.drawable.beetle_fire_giant_4));
+        allImages.put("Satchel", myScreen.generateImage(R.drawable.satchel));
+        allImages.put("SilverChest", myScreen.generateImage(R.drawable.chest_silver));
     }
 
     public void draw(Canvas canvas) {

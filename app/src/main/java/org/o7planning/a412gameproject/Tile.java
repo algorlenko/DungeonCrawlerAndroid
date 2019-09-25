@@ -11,8 +11,8 @@ import java.io.IOException;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 /**
- *
  * @author Sasha
  */
 public class Tile {
@@ -24,11 +24,11 @@ public class Tile {
     Bitmap[] image;
     MapObject[] myContents;
     boolean hasChanged;
-//GameScreen thisScreen; Old Approach
-GameEngine myEngine;
+    //GameScreen thisScreen; Old Approach
+    GameEngine myEngine;
 
     public Tile(int myX, int myY, int floorImageString, GameEngine passedEngine) throws IOException {
-myEngine = passedEngine;
+        myEngine = passedEngine;
         //thisScreen = myScreen; // old way of doing it
         imageName = new int[4];
         image = new Bitmap[4];
@@ -37,14 +37,14 @@ myEngine = passedEngine;
         imageName[0] = floorImageString;
         //imageName[0] = R.drawable.carpet_1; for testing
         imageName[1] = R.drawable.empty;
-imageName[2] = R.drawable.empty;
+        imageName[2] = R.drawable.empty;
         imageName[3] = R.drawable.empty;
 
 
         image[0] = generateImage(imageName[0]);
         image[1] = generateImage(imageName[0]);
-image[2] = null;
-image[3] = null;
+        image[2] = null;
+        image[3] = null;
         x = myX;
         y = myY;
     }
@@ -54,7 +54,7 @@ image[3] = null;
         imageName[deletionLayer] = R.drawable.empty;
     }
 
-    public Bitmap generateImage(int myImageName) throws IOException {
+    public Bitmap generateImage(int myImageName) {
         return myEngine.thisScreen.generateImage(myImageName);
         // it used to be just thisScreen
     }
