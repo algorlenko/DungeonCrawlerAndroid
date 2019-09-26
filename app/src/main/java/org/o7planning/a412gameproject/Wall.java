@@ -1,10 +1,8 @@
 package org.o7planning.a412gameproject;
 
-import java.io.IOException;
-
 public class Wall extends MapObject {
 
-    public Wall(int myX, int myY, int wallImageString, GameEngine passedEngine) throws IOException {
+    public Wall(int myX, int myY, int wallImageString, GameEngine passedEngine) {
         myEngine = passedEngine;
         myLayer = 3;
         unitImage = wallImageString;
@@ -15,7 +13,7 @@ public class Wall extends MapObject {
     }
 
     public Wall(Tile currentTile) {
-        super(currentTile, 3, 1, "Wall");
+        super(currentTile, 3, "Wall");
         x = currentTile.x;
         y = currentTile.y;
     }

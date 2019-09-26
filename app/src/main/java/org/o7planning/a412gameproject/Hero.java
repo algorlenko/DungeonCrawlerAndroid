@@ -1,7 +1,5 @@
 package org.o7planning.a412gameproject;
 
-import java.io.IOException;
-
 public class Hero extends Unit {
 
     final int SLOTS = 6;
@@ -10,7 +8,6 @@ public class Hero extends Unit {
     int inventorySpace;
     long goldCoins;
     int baseAttackPower;
-
     public Spell selectedSpell;
     int baseIntelligence; // added by Alex
     int intelligence;
@@ -18,30 +15,8 @@ public class Hero extends Unit {
     int baseMaxHP;
     int armor; //Hunter     
 
-    public Hero(int myX, int myY, int myImage, int myMaxHP, GameEngine passedEngine) {
-        super(myX, myY, myImage, myMaxHP, passedEngine);
-        baseMaxHP = myMaxHP;
-        goldCoins = 0;
-        baseAttackPower = 20;
-        attackPower = baseAttackPower;
-        baseIntelligence = 50; // added by Alex
-        intelligence = baseIntelligence;
-        inventorySpace = 36;
-        myInventory = new Inventory(36);
-
-        maxMana = 100;
-        baseMaxMana = maxMana;
-        mana = maxMana;
-
-        equippedItems = new Equipment[SLOTS];
-        for (int i = 0; i < SLOTS; i++) {
-            equippedItems[i] = null;
-
-        }
-    }
-
     public Hero(Tile heroTile, int myMaxHP) {
-        super(heroTile, myMaxHP, "Hero",4);
+        super(heroTile, myMaxHP, "Hero", 4);
         baseMaxHP = myMaxHP;
         goldCoins = 0;
         baseAttackPower = 20;
@@ -50,22 +25,13 @@ public class Hero extends Unit {
         intelligence = baseIntelligence;
         inventorySpace = 36;
         myInventory = new Inventory(36);
-
         maxMana = 100;
         baseMaxMana = maxMana;
         mana = maxMana;
-
         equippedItems = new Equipment[SLOTS];
+
         for (int i = 0; i < SLOTS; i++) {
             equippedItems[i] = null;
-
-        }
-    }
-
-
-    public void heroMove(int dx, int dy) {
-        if ((dx * dx) < 4 && (dy * dy) < 4) {
-            move(dx, dy, myEngine.myTiles, myEngine.dungeonColumns, myEngine.dungeonRows, myEngine.myStatus);
         }
     }
 
@@ -86,7 +52,7 @@ public class Hero extends Unit {
                 tempMessage = "You have picked up some items, and " + howMuchGold + " gold coins.";
             }
             if (pickUpItems(myGrabbedLoot)) {
-                newTile.myContents[2]=null;
+                newTile.myContents[2] = null;
             } else {
                 tempMessage = "Your Inventory is Full, but you grabbed the " + howMuchGold + " gold coins.";
             }
@@ -101,66 +67,10 @@ public class Hero extends Unit {
         objectToSwap.moveToTile(oldTile);
     }
 
-    public boolean move(int dx, int dy, Tile myTiles[][], int dungeonColumns, int dungeonRows, StatusScreen myStatus) {
-        int futureX = x + dx;
-        int futureY = y + dy;
-        int pastX = x;
-        int pastY = y;
-
-        if (!(futureX < 0 || futureX > dungeonColumns - 1 || futureY < 0 || futureY > dungeonRows - 1)) {
-            //if(!(myTiles[futureX][futureY].myContents[1] instanceof Wall))
-            if (myTiles[futureX][futureY].myContents[myLayer] == null || myTiles[futureX][futureY].myContents[myLayer] instanceof FriendlyCreature) { // Gorlenko modified this
-                x = futureX;
-                y = futureY;
-                if (myTiles[futureX][futureY].myContents[myLayer] instanceof FriendlyCreature) {
-                    myTiles[futureX][futureY].myContents[myLayer].x = pastX;
-                    myTiles[futureX][futureY].myContents[myLayer].y = pastY;
-                    myTiles[futureX][futureY].myContents[myLayer].loadIntoTile(pastX, pastY);
-                    // If the hero moves into a friendly monster he needs to be able to swap with him
-                } else {
-                    myTiles[pastX][pastY].myContents[myLayer] = null;
-                    myTiles[pastX][pastY].imageName[myLayer] = R.drawable.empty;
-                }
-                loadIntoTile(x, y);
-
-                //myStatus.message = "you have moved into coordinate" + x + " " + y + "and your current error is: ";
-                if (myTiles[futureX][futureY].myContents[2] instanceof LootBag) // this entire if statement could be converted into a more comprehensive pickUpItem function
-                {
-                    long howMuchGold;
-                    String tempMessage;
-                    LootBag myGrabbedLoot;
-                    myGrabbedLoot = ((LootBag) myTiles[futureX][futureY].myContents[2]);
-                    howMuchGold = myGrabbedLoot.goldCoins;
-                    if (myGrabbedLoot.droppedItems == null) {
-                        tempMessage = "You have picked up " + howMuchGold + " gold coins.";
-                    } else if (myGrabbedLoot.droppedItems.size() == 1) {
-                        tempMessage = "You have picked up an item, and " + howMuchGold + " gold coins.";
-                    } else {
-                        tempMessage = "You have picked up some items, and " + howMuchGold + " gold coins.";
-                    }
-                    if (pickUpItems(myGrabbedLoot)) {
-                        myTiles[x][y].clearAtLayer(2);
-                    } else {
-                        tempMessage = "Your Inventory is Full, but you grabbed the " + howMuchGold + " gold coins.";
-                    }
-                    myStatus.pushMessage(tempMessage);
-                }
-
-                return true;
-            }
-            myStatus.pushMessage("You cannnot move there");
-            return false;
-        }
-        myStatus.pushMessage("You cannnot move there");
-        return false;
-    }
 
     @Override
     public void takeDamage(int damageAmount) {
-
         hp -= damageAmount;
-
-
         if (hp <= 0) {
             deathFunction();
         }
@@ -225,8 +135,6 @@ public class Hero extends Unit {
     public void recover() {
         hp = maxHP;
         mana = maxMana;
-
-
     }
 
 }

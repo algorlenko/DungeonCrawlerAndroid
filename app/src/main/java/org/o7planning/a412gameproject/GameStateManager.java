@@ -90,7 +90,8 @@ public class GameStateManager {
         allImages.put("Door0", myScreen.generateImage(R.drawable.runed_door));
         allImages.put("Door1", myScreen.generateImage(R.drawable.open_door));
         allImages.put("Shopkeeper0", myScreen.generateImage(R.drawable.merchant_a_shopkeeper));
-        allImages.put("Wall0", myScreen.generateImage(R.drawable.wall_hedge_7));
+        allImages.put("Wall", myScreen.generateImage(R.drawable.wall_hedge_7));
+        allImages.put("Floor", myScreen.generateImage(R.drawable.ground_dirt_dark_3));
         allImages.put("Cultist0", myScreen.generateImage(R.drawable.cultist_1));
         allImages.put("Cultist1", myScreen.generateImage(R.drawable.cultist_2));
         allImages.put("Cultist2", myScreen.generateImage(R.drawable.cultist_3));

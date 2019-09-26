@@ -49,8 +49,9 @@ public class Unit extends MapObject {
     }
 
     public void deathFunction(){
-        myEngine.myTiles[x][y].myContents[myLayer] = null;
-        myEngine.myTiles[x][y].imageName[myLayer] = R.drawable.empty;
+        //myEngine.myTiles[x][y].myContents[myLayer] = null;
+        currentTile.myContents[myLayer] = null;
+        //myEngine.myTiles[x][y].imageName[myLayer] = R.drawable.empty;
         isAlive = false;
     }
 
@@ -65,7 +66,7 @@ public class Unit extends MapObject {
                 x = futureX;
                 y = futureY;
                 myEngine.myTiles[pastX][pastY].myContents[myLayer] = null;
-                myEngine.myTiles[pastX][pastY].imageName[myLayer] = R.drawable.empty;
+                //myEngine.myTiles[pastX][pastY].imageName[myLayer] = R.drawable.empty;
 
                 loadIntoTile(x, y);
             }
